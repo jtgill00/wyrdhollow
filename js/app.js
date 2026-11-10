@@ -107,8 +107,8 @@
 	// ---------- Home: hero ------------------------------------------------------------------
 	const logo = $(".logo");
 	logo.innerHTML = [...logo.textContent].map((ch, i) => `<span style="animation-delay:${0.25 + i * 0.06}s">${ch}</span>`).join("");
-	// The parade: creatures at the back, a gap, the goblins giving chase,
-	// and the hero out front on a broom, wand glowing (left to right = back to front).
+	// The parade: the creatures following the hero, the hero on a broom with wand glowing,
+	// chasing the goblins who run out front (left to right = back to front).
 	const parade = $("#parade");
 	const add = (node) => { parade.append(node); return node; };
 	const flying = ["Emberwing Moth", "Lanternjelly", "Starling Wisp"];
@@ -119,13 +119,7 @@
 		s.style.animationDelay = (i * -0.23) + "s";
 		sprite(s, c.sprite, 3);
 	});
-	add(el("div", "gap")).style.width = "220px";
-	[2.6, 2, 2.2, 1.9].forEach((scale, i) => {   // a big one leading the band
-		const g = add(el("div", "sprite goblin"));
-		g.style.animationDelay = (i * -0.11) + "s";
-		sprite(g, WH.goblin, scale);
-	});
-	add(el("div", "gap")).style.width = "70px";
+	add(el("div", "gap")).style.width = "90px";
 	const rider = add(el("div", "rider"));
 	rider.innerHTML = `<div class="shadow"></div>
 		<svg class="broom" viewBox="0 0 44 11" aria-hidden="true">
@@ -143,6 +137,12 @@
 		sp.style.setProperty("--dy", (Math.random() * 30 - 8).toFixed(0) + "px");
 		rider.append(sp);
 	}
+	add(el("div", "gap")).style.width = "150px";
+	[1.9, 2.2, 2, 2.6].forEach((scale, i) => {   // the big one leading the band, running away
+		const g = add(el("div", "sprite goblin"));
+		g.style.animationDelay = (i * -0.11) + "s";
+		sprite(g, WH.goblin, scale);
+	});
 	$("#marquee").innerHTML = [...SITE.marquee, ...SITE.marquee].map((t) => `<span>${esc(t)}</span><span>✦</span>`).join("");
 
 	// ---------- Features (3D tilt cards) -------------------------------------------------------
