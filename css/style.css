@@ -38,7 +38,7 @@ html[data-path="hollow"] {
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; overflow-x: hidden; overflow-x: clip; }
+html { scroll-behavior: smooth; }   /* no overflow here: it would stop the gallery pinning (position: sticky) */
 main, header, footer, section { max-width: 100vw; }
 .marquee, .hero, #view-home { overflow-x: clip; }
 body {
@@ -48,7 +48,7 @@ body {
 	font-family: var(--sans);
 	font-size: 17px;
 	line-height: 1.6;
-	overflow-x: hidden;
+	overflow-x: clip;   /* clip, not hidden: hidden turns the page into its own scroller and breaks the pinned gallery */
 	-webkit-font-smoothing: antialiased;
 }
 body.locked { overflow: hidden; }
@@ -231,6 +231,9 @@ html[data-path="radiant"] .switch button[data-p="radiant"], html[data-path="holl
 .progress-bar { height: 2px; background: var(--line); margin: 34px 8vw 0; border-radius: 2px; overflow: hidden; }
 .progress-bar i { display: block; height: 100%; width: 0; background: var(--grad); box-shadow: 0 0 12px var(--glow); }
 @media (max-width: 760px) { .hscroll { height: auto; } .hscroll .sticky { position: static; height: auto; padding: 60px 0; } .hscroll .rail { overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 16px; } .shot { flex-basis: 86vw; scroll-snap-align: center; } .progress-bar { display: none; } }
+.swipe-hint { display: none; text-align: center; font-family: var(--pixel); font-size: 0.7rem; letter-spacing: 0.15em; color: var(--accent); margin: 18px 0 0; animation: nudge 1.6s ease-in-out infinite; }
+@keyframes nudge { 50% { transform: translateX(8px); } }
+@media (max-width: 760px) { .swipe-hint { display: block; } }
 #lightbox { position: fixed; inset: 0; z-index: 9500; background: rgba(4, 3, 8, 0.92); display: none; place-items: center; padding: 30px; backdrop-filter: blur(10px); }
 #lightbox.open { display: grid; animation: fadein 0.4s; }
 #lightbox img { max-width: 100%; max-height: 82vh; border-radius: 14px; box-shadow: 0 0 80px var(--glow); }

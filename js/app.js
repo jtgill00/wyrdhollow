@@ -139,6 +139,10 @@
 
 	// ---------- Gallery (pinned, scrolls sideways) -------------------------------------------
 	$("#rail").innerHTML = WH.screenshots.map((s, i) => `<figure class="shot" data-i="${i}"><span class="n">${String(i + 1).padStart(2, "0")} / ${String(WH.screenshots.length).padStart(2, "0")}</span><img src="${s.src}" alt="${esc(s.caption)}" loading="lazy"><figcaption>${esc(s.caption)}</figcaption></figure>`).join("");
+	// Each screenshot gets about 70% of a screen of scrolling (desktop).
+	const sizeGallery = () => { $("#gallery").style.height = innerWidth > 760 ? `${100 + WH.screenshots.length * 70}vh` : ""; };
+	sizeGallery(); addEventListener("resize", sizeGallery);
+	$("#swipe-hint").textContent = `Swipe to see all ${WH.screenshots.length} screenshots →`;
 	const lb = $("#lightbox");
 	$$(".shot").forEach((s) => s.addEventListener("click", () => { const d = WH.screenshots[s.dataset.i]; $("img", lb).src = d.src; $("p", lb).textContent = d.caption; lb.classList.add("open"); }));
 	lb.addEventListener("click", () => lb.classList.remove("open"));
@@ -148,7 +152,9 @@
 		if (!sec || innerWidth <= 760) { rail.style.transform = ""; return; }
 		const r = sec.getBoundingClientRect(), total = sec.offsetHeight - innerHeight;
 		const k = Math.min(1, Math.max(0, -r.top / total));
-		const max = rail.scrollWidth - innerWidth;
+		// Slide until the last screenshot sits in the middle of the screen.
+		const last = rail.lastElementChild;
+		const max = last ? Math.max(0, last.offsetLeft + last.offsetWidth / 2 - innerWidth / 2) : 0;
 		rail.style.transform = `translateX(${-k * max}px)`;
 		$("#rail-bar").style.width = k * 100 + "%";
 	}
