@@ -424,3 +424,12 @@ html.spoilers .spoil::after, .spoil.shown::after { display: none; }
 	[data-reveal] { opacity: 1; transform: none; clip-path: none; }
 	.logo span { opacity: 1; transform: none; }
 }
+
+/* Faint painted backdrops: each section gets its own scene, fading in and out at its edges */
+[data-bg] { position: relative; isolation: isolate; }
+/* --bgimg is set in index.html relative to this css folder (../assets/bg/...) */
+[data-bg]::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+	background: var(--bgimg) center / cover no-repeat; opacity: 0.16; filter: saturate(0.85);
+	-webkit-mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent);
+	mask-image: linear-gradient(to bottom, transparent, #000 22%, #000 78%, transparent); }
+.bg-top[data-bg]::after { bottom: auto; height: min(1100px, 130vh); background-position: center top; }

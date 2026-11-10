@@ -13,7 +13,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=Silkscreen&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="css/style.css?v=9">
+	<link rel="stylesheet" href="css/style.css?v=10">
 </head>
 <body class="locked">
 	<div id="loader"><div class="sig"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div><p>WEAVING THE VALLEY…</p></div>
@@ -61,7 +61,7 @@
 
 		<div class="marquee"><div class="track" id="marquee"></div></div>
 
-		<section id="game">
+		<section id="game" data-bg style="--bgimg:url(../assets/bg/game_garden.jpg)">
 			<div class="wrap">
 				<span class="kicker" data-reveal>The Game</span>
 				<h2 data-reveal>A wizard's life,<br><span class="grad-text">a valley's fate.</span></h2>
@@ -70,7 +70,7 @@
 			</div>
 		</section>
 
-		<section id="path">
+		<section id="path" data-bg style="--bgimg:url(../assets/bg/path_duel.jpg)">
 			<div class="wrap path">
 				<div>
 					<span class="kicker" data-reveal>Light &amp; Shadow</span>
@@ -94,7 +94,7 @@
 			</div>
 		</section>
 
-		<section id="world">
+		<section id="world" data-bg style="--bgimg:url(../assets/bg/world_portal.jpg)">
 			<div class="wrap">
 				<span class="kicker" data-reveal>The World</span>
 				<h2 data-reveal>A valley that <span class="grad-text">opens in rings.</span></h2>
@@ -106,7 +106,7 @@
 			</div>
 		</section>
 
-		<section id="characters">
+		<section id="characters" data-bg style="--bgimg:url(../assets/bg/characters_broom.jpg)">
 			<div class="wrap">
 				<span class="kicker" data-reveal>The People</span>
 				<h2 data-reveal>Friends, rivals, <span class="grad-text">and something worse.</span></h2>
@@ -115,7 +115,7 @@
 			</div>
 		</section>
 
-		<section id="guilds">
+		<section id="guilds" data-bg style="--bgimg:url(../assets/bg/guilds_duel.jpg)">
 			<div class="wrap">
 				<span class="kicker" data-reveal>Six Guilds</span>
 				<h2 data-reveal>Rise from Initiate <span class="grad-text">to Adept.</span></h2>
@@ -125,7 +125,7 @@
 			</div>
 		</section>
 
-		<section id="familiars">
+		<section id="familiars" data-bg style="--bgimg:url(../assets/bg/familiars_fox.jpg)">
 			<div class="wrap">
 				<span class="kicker" data-reveal>Familiars</span>
 				<h2 data-reveal>Calm them, <span class="grad-text">or bind them.</span></h2>
@@ -134,7 +134,7 @@
 			</div>
 		</section>
 
-		<section id="achievements">
+		<section id="achievements" data-bg style="--bgimg:url(../assets/bg/achievements_book.jpg)">
 			<div class="wrap">
 				<span class="kicker" data-reveal>Achievements</span>
 				<h2 data-reveal><span id="ach-count">33</span> to earn on <span class="grad-text">Steam.</span></h2>
@@ -143,7 +143,7 @@
 			</div>
 		</section>
 
-		<section class="cta-band">
+		<section class="cta-band" data-bg style="--bgimg:url(../assets/bg/cta_cottage.jpg)">
 			<div class="wrap" style="position:relative">
 				<span class="kicker" data-reveal>Coming to Steam</span>
 				<h2 class="grad-text" data-reveal>The valley is waiting.</h2>
@@ -154,7 +154,7 @@
 	</div>
 
 	<!-- ============================ GUIDE ============================ -->
-	<div class="view" id="view-guide">
+	<div class="view bg-top" id="view-guide" data-bg style="--bgimg:url(../assets/bg/guide_runes.jpg)">
 		<div class="page-hero wrap">
 			<span class="kicker">The Field Guide</span>
 			<h1 class="grad-text">Stuck? Start here.</h1>
@@ -171,7 +171,7 @@
 	</div>
 
 	<!-- ============================ STORY ============================ -->
-	<div class="view" id="view-story">
+	<div class="view bg-top" id="view-story" data-bg style="--bgimg:url(../assets/bg/story_shadow.jpg)">
 		<div class="page-hero wrap">
 			<span class="kicker">The Story</span>
 			<h1 class="grad-text">Past &amp; Present</h1>
@@ -198,8 +198,8 @@
 	<div id="lightbox"><div><img alt=""><p></p></div></div>
 	<div id="person-modal"><div class="box"></div></div>
 
-	<script src="js/data.js?v=9"></script>
-	<script src="js/content.js?v=9"></script>
-	<script src="js/app.js?v=9"></script>
+	<script src="js/data.js?v=10"></script>
+	<script src="js/content.js?v=10"></script>
+	<script src="js/app.js?v=10"></script>
 </body>
 </html>
