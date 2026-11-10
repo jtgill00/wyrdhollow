@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en" data-path="radiant">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WyrdHollow: Part 1 · A wizarding life sim</title>
+	<meta name="description" content="WyrdHollow: Part 1 is a pixel-art wizarding life sim. Restore your cottage, join six guilds, master real-time magic duels, and choose Light or Shadow. Coming to Steam.">
+	<meta property="og:title" content="WyrdHollow: Part 1">
+	<meta property="og:description" content="Six Seals. One crown. Light, or shadow. A pixel-art wizarding life sim coming to Steam.">
+	<meta property="og:image" content="assets/shots/01_title.jpg">
+	<meta name="theme-color" content="#07060d">
+	<link rel="icon" href="assets/favicon.png">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=Silkscreen&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/style.css?v=3">
+</head>
+<body class="locked">
+	<div id="loader"><div class="sig"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div><p>WEAVING THE VALLEY…</p></div>
+	<canvas id="weave"></canvas>
+	<div class="grain"></div>
+	<div class="vignette"></div>
+	<div id="wipe"></div>
+	<div id="portal"></div>
+	<div id="cursor"></div><div id="cursor-dot"></div>
+
+	<header class="top">
+		<div class="wrap nav">
+			<a class="brand" href="#/"><img src="assets/icon.png" alt="">WyrdHollow</a>
+			<button class="menu-btn" aria-label="Menu">MENU</button>
+			<nav class="links">
+				<a href="#/" data-view="home">Home</a>
+				<a href="#/#game" data-view="home">The Game</a>
+				<a href="#/#world" data-view="home">World</a>
+				<a href="#/#characters" data-view="home">Characters</a>
+				<a href="#/guide" data-view="guide">Guide</a>
+				<a href="#/story" data-view="story">Story</a>
+				<a class="btn" data-steam href="#" style="padding:10px 16px;font-size:.7rem">Wishlist</a>
+			</nav>
+		</div>
+	</header>
+
+	<main>
+	<!-- ============================ HOME ============================ -->
+	<div class="view" id="view-home">
+		<section class="hero">
+			<div class="hero-bg"><img src="assets/shots/03_village.jpg" alt="" data-parallax="0.25"></div>
+			<div class="hero-inner wrap">
+				<h1 class="logo" aria-label="WyrdHollow">WyrdHollow</h1>
+				<div class="part">· PART ONE ·</div>
+				<p class="tag">Six Seals. One crown. Light, or shadow.</p>
+				<div class="hero-ctas">
+					<a class="btn magnet" data-steam href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-10 9.4l5.4 2.2a2.8 2.8 0 0 1 1.6-.5h.2l2.4-3.5v-.1a3.8 3.8 0 1 1 3.8 3.8h-.1l-3.4 2.4v.1a2.8 2.8 0 0 1-5.6.3L2.4 14.8A10 10 0 1 0 12 2z"/></svg>Wishlist on Steam</a>
+					<a class="btn ghost magnet" href="#/#game">Discover the valley</a>
+				</div>
+				<div class="hero-meta"><span><b>PC</b> · STEAM DECK</span><span><b>1</b> PLAYER</span><span><b>4</b> ENDINGS</span><span><b>14</b> SKILLS</span></div>
+			</div>
+			<div class="walker" id="walker"></div>
+			<div class="scroll-hint"></div>
+		</section>
+
+		<div class="marquee"><div class="track" id="marquee"></div></div>
+
+		<section id="game">
+			<div class="wrap">
+				<span class="kicker" data-reveal>The Game</span>
+				<h2 data-reveal>A wizard's life,<br><span class="grad-text">a valley's fate.</span></h2>
+				<p class="lead" data-reveal>A letter sealed in violet wax brings you to WyrdHollow. Your great-aunt has vanished, her cottage is a ruin, and the silver scar on your palm has started to glow.</p>
+				<div class="grid g3" id="features" style="margin-top:50px"></div>
+			</div>
+		</section>
+
+		<section id="path">
+			<div class="wrap path">
+				<div>
+					<span class="kicker" data-reveal>Light &amp; Shadow</span>
+					<h2 data-reveal>Your spells<br><span class="grad-text">decide who you are.</span></h2>
+					<p class="lead" data-reveal>There's no good-or-evil dialogue choice. Radiant magic protects, heals and calms. Hollow magic drains, binds and curses, and it's stronger and quicker to learn. The villagers, your creatures, even the glow of your wand notice which you use.</p>
+					<div class="switch" data-reveal><span class="knob"></span><button data-p="radiant">✦ RADIANT</button><button data-p="hollow">◆ HOLLOW</button></div>
+					<p id="path-blurb" class="swap" style="color:var(--accent3)"></p>
+					<div class="spell-chips" id="path-spells"></div>
+				</div>
+				<div class="orb" data-reveal></div>
+			</div>
+			<div class="wrap"><div class="endings" id="endings"></div></div>
+		</section>
+
+		<section class="hscroll" id="gallery">
+			<div class="sticky">
+				<div class="wrap" style="margin-bottom:34px"><span class="kicker">Gallery</span><h2>Step into <span class="grad-text">the Hollow.</span></h2></div>
+				<div class="rail" id="rail"></div>
+				<div class="progress-bar"><i id="rail-bar"></i></div>
+			</div>
+		</section>
+
+		<section id="world">
+			<div class="wrap">
+				<span class="kicker" data-reveal>The World</span>
+				<h2 data-reveal>A valley that <span class="grad-text">opens in rings.</span></h2>
+				<p class="lead" data-reveal>Fifteen places, each unlocked by what you learn, brew, befriend or earn. Tap a light on the map.</p>
+				<div class="map-wrap" style="margin-top:40px" data-reveal>
+					<div class="map" id="map"><svg viewBox="0 0 100 100" preserveAspectRatio="none" id="map-lines"></svg></div>
+					<div class="place-panel" id="place"></div>
+				</div>
+			</div>
+		</section>
+
+		<section id="characters">
+			<div class="wrap">
+				<span class="kicker" data-reveal>The People</span>
+				<h2 data-reveal>Friends, rivals, <span class="grad-text">and something worse.</span></h2>
+				<p class="lead" data-reveal>Befriend them, romance three of them, fight beside them, or against them. Tap anyone to meet them.</p>
+				<div class="cast" id="cast" style="margin-top:40px"></div>
+			</div>
+		</section>
+
+		<section id="guilds">
+			<div class="wrap">
+				<span class="kicker" data-reveal>Six Guilds</span>
+				<h2 data-reveal>Rise from Initiate <span class="grad-text">to Adept.</span></h2>
+				<p class="lead" data-reveal>Each guild guards one of the six Seals. Earn it with a hand-made trial, or take the guild's hidden Hollow road.</p>
+				<div class="tabs" id="guild-tabs" data-reveal></div>
+				<div class="guild-panel swap" id="guild-panel" data-reveal></div>
+			</div>
+		</section>
+
+		<section id="familiars">
+			<div class="wrap">
+				<span class="kicker" data-reveal>Familiars</span>
+				<h2 data-reveal>Calm them, <span class="grad-text">or bind them.</span></h2>
+				<p class="lead" data-reveal>Kneel and keep still to calm a creature with Radiant patience, or bind it instantly with Hollow magic. Either way it joins you, helps at home and fights at your side.</p>
+				<div class="critters" id="critters" style="margin-top:40px"></div>
+			</div>
+		</section>
+
+		<section id="achievements">
+			<div class="wrap">
+				<span class="kicker" data-reveal>Achievements</span>
+				<h2 data-reveal><span id="ach-count">33</span> to earn on <span class="grad-text">Steam.</span></h2>
+				<p class="lead" data-reveal>Hover or tap a badge to see what it asks of you.</p>
+				<div class="ach" id="ach" style="margin-top:40px"></div>
+			</div>
+		</section>
+
+		<section class="cta-band">
+			<div class="wrap" style="position:relative">
+				<span class="kicker" data-reveal>Coming to Steam</span>
+				<h2 class="grad-text" data-reveal>The valley is waiting.</h2>
+				<p class="lead" style="margin:0 auto 34px" data-reveal>Wishlist WyrdHollow: Part 1 to hear the moment it opens its gates.</p>
+				<div class="hero-ctas" data-reveal><a class="btn magnet" data-steam href="#">Wishlist on Steam</a><a class="btn ghost magnet" href="#/guide">Read the guide</a></div>
+			</div>
+		</section>
+	</div>
+
+	<!-- ============================ GUIDE ============================ -->
+	<div class="view" id="view-guide">
+		<div class="page-hero wrap">
+			<span class="kicker">The Field Guide</span>
+			<h1 class="grad-text">Stuck? Start here.</h1>
+			<p class="lead" style="margin:0 auto">Everything in WyrdHollow, from your first Glowcap to the crown chamber. Search for anything: a fish, a place, a person, a quest step.</p>
+		</div>
+		<div class="wrap guide">
+			<aside class="toc" id="toc"></aside>
+			<div>
+				<div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Try “ferry”, “Glowgill”, “Mirrorwood”, “finisher”…" autocomplete="off"></div>
+				<div class="results" id="results"></div>
+				<div id="guide-body"></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ============================ STORY ============================ -->
+	<div class="view" id="view-story">
+		<div class="page-hero wrap">
+			<span class="kicker">The Story</span>
+			<h1 class="grad-text">Past &amp; Present</h1>
+			<p class="lead" style="margin:0 auto">Twenty-five years ago the Weave shattered. This is everything that led to it, and everything that follows. Spoilers are hidden until you tap them.</p>
+		</div>
+		<div class="wrap">
+			<div class="spoiler-bar"><div class="switch" id="spoil-switch"><span class="knob"></span><button data-s="off">HIDE SPOILERS</button><button data-s="on">SHOW EVERYTHING</button></div></div>
+			<div class="timeline" id="timeline"><div class="fill" id="tfill"></div></div>
+		</div>
+	</div>
+	</main>
+
+	<footer>
+		<div class="wrap">
+			<div class="cols">
+				<div><a class="brand" href="#/"><img src="assets/icon.png" alt="">WyrdHollow: Part 1</a><p style="max-width:360px">A pixel-art wizarding life sim. Created by JT.</p></div>
+				<div><b style="color:var(--ink)">Explore</b><br><a href="#/#game">The Game</a><br><a href="#/#world">World</a><br><a href="#/guide">Guide</a><br><a href="#/story">Story</a></div>
+				<div><b style="color:var(--ink)">Follow</b><br><a data-steam href="#">Steam</a><br><a href="#/#achievements">Achievements</a></div>
+			</div>
+			<p class="legal">© <span id="year"></span> JT. WyrdHollow and all its characters are original works. Steam and the Steam logo are trademarks of Valve Corporation. Made with the Godot Engine.</p>
+		</div>
+	</footer>
+
+	<div id="lightbox"><div><img alt=""><p></p></div></div>
+	<div id="person-modal"><div class="box"></div></div>
+
+	<script src="js/data.js?v=3"></script>
+	<script src="js/content.js?v=3"></script>
+	<script src="js/app.js?v=3"></script>
+</body>
+</html>
