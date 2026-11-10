@@ -107,8 +107,42 @@
 	// ---------- Home: hero ------------------------------------------------------------------
 	const logo = $(".logo");
 	logo.innerHTML = [...logo.textContent].map((ch, i) => `<span style="animation-delay:${0.25 + i * 0.06}s">${ch}</span>`).join("");
-	const walker = $("#walker");
-	sprite(walker, { ...WH.hero, row: 3 }, 2);
+	// The parade: creatures at the back, a gap, the goblins giving chase,
+	// and the hero out front on a broom, wand glowing (left to right = back to front).
+	const parade = $("#parade");
+	const add = (node) => { parade.append(node); return node; };
+	const flying = ["Emberwing Moth", "Lanternjelly", "Starling Wisp"];
+	["Puddlefox", "Emberwing Moth", "Mossback Tortoise", "Thornhound", "Starling Wisp", "Glimmer Newt", "Lanternjelly", "Elder Wyrmling"].forEach((n, i) => {
+		const c = WH.creatures.find((x) => x.name === n);
+		if (!c) return;
+		const s = add(el("div", "sprite critter-walk" + (flying.includes(n) ? " fly" : "")));
+		s.style.animationDelay = (i * -0.23) + "s";
+		sprite(s, c.sprite, 3);
+	});
+	add(el("div", "gap")).style.width = "220px";
+	[2.6, 2, 2.2, 1.9].forEach((scale, i) => {   // a big one leading the band
+		const g = add(el("div", "sprite goblin"));
+		g.style.animationDelay = (i * -0.11) + "s";
+		sprite(g, WH.goblin, scale);
+	});
+	add(el("div", "gap")).style.width = "70px";
+	const rider = add(el("div", "rider"));
+	rider.innerHTML = `<div class="shadow"></div>
+		<svg class="broom" viewBox="0 0 44 11" aria-hidden="true">
+			<rect class="streak" x="0" y="3" width="6" height="1" fill="#ffffff" opacity=".6"/><rect class="streak" x="1" y="6" width="7" height="1" fill="#ffffff" opacity=".6"/><rect class="streak" x="0" y="8" width="5" height="1" fill="#ffffff" opacity=".6"/>
+			<polygon points="8,2 18,4 18,9 8,10" fill="#5a3a1c"/><polygon points="9,3 18,4.6 18,8.4 9,9" fill="#8a6a3a"/>
+			<rect x="10" y="5" width="7" height="1" fill="#6a4a24"/><rect x="10" y="7" width="7" height="1" fill="#6a4a24"/>
+			<rect x="17" y="3" width="2" height="7" fill="#c83a3a"/>
+			<rect x="19" y="5" width="25" height="3" fill="#1a1418"/><rect x="19" y="6" width="24" height="1" fill="#c8a878"/>
+		</svg>`;
+	const heroS = el("div", "sprite"); sprite(heroS, { ...WH.hero_idle, row: 3 }, 2); rider.append(heroS);
+	rider.append(el("div", "wand"));
+	for (let i = 0; i < 7; i++) {   // sparkles trailing off the wand tip
+		const sp = el("div", "spark");
+		sp.style.animationDelay = (i * -0.17) + "s";
+		sp.style.setProperty("--dy", (Math.random() * 30 - 8).toFixed(0) + "px");
+		rider.append(sp);
+	}
 	$("#marquee").innerHTML = [...SITE.marquee, ...SITE.marquee].map((t) => `<span>${esc(t)}</span><span>✦</span>`).join("");
 
 	// ---------- Features (3D tilt cards) -------------------------------------------------------

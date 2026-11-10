@@ -51,6 +51,23 @@ window.WH = {
   "fps": 8,
   "row": 0
  },
+ "hero_idle": {
+  "src": "assets/sprites/hero_idle.png",
+  "fw": 32,
+  "fh": 48,
+  "start": 0,
+  "count": 4,
+  "fps": 4
+ },
+ "goblin": {
+  "src": "assets/sprites/goblin_minion.png",
+  "fw": 32,
+  "fh": 32,
+  "start": 2,
+  "count": 2,
+  "fps": 12,
+  "row": 0
+ },
  "achievements": [
   {
    "id": "SPARK_IN_THE_HEARTH",
