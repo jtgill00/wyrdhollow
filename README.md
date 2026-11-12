@@ -1,13 +1,13 @@
 # WyrdHollow: Part 1 — website
 
-The official site: a single page with three views (Home, Guide, Story), no
+The official site: a single page with four views (Home, Guide, Story, Play), no
 build step and no libraries. It works straight from GitHub Pages.
 
 ## Put it online with GitHub Pages
 
 1. On github.com, create a new **public** repository (for example `wyrdhollow`).
 2. Upload **the contents of this `website` folder** (not the folder itself):
-   `index.html`, `css/`, `js/`, `assets/`, `.nojekyll`.
+   `index.html`, `css/`, `js/`, `assets/`, `play/`, `.nojekyll`.
    The easiest way: on the new repository's page click **"uploading an existing
    file"**, drag everything in, then **Commit changes**.
    (Hidden files like `.nojekyll` may need dragging in on their own, or turn
@@ -19,6 +19,37 @@ build step and no libraries. It works straight from GitHub Pages.
    `https://<your-username>.github.io/<repository-name>/`.
    (Name the repository `<your-username>.github.io` and it lives at that
    address instead.)
+
+## The playable game (Play page)
+
+The `play/` folder is the whole game, built for web browsers (about 45 MB).
+The **Play** page (`#/play`) only loads it when someone presses Start.
+Upload `play/` with everything else. It isn't kept in git because it's big
+and rebuilt each time.
+
+After the game changes, rebuild it from the game's project folder:
+
+```
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --export-release "Web" website/play/index.html
+```
+
+then upload the `play/` folder again (replace the old files).
+
+**Upload it with GitHub Desktop, not the website.** github.com only accepts
+files up to 25 MB when you drag them in, and `index.wasm` is about 40 MB.
+GitHub Desktop has no such limit:
+
+1. In GitHub Desktop: **File → Clone Repository**, then pick your site's
+   repository. Do this once; it makes a folder on your Mac.
+2. Copy everything inside this `website` folder into that folder, replacing
+   the old files.
+3. Back in GitHub Desktop, write a summary (for example "Add the Play page"),
+   click **Commit to main**, then **Push origin**.
+
+- It's a **release** build, so the Shift test shortcuts don't work in it.
+- Saves live in each player's browser, separate from the Steam version.
+- GitHub's limit is 100 MB per file. The biggest file, `index.wasm`, is about
+  40 MB.
 
 ## When you get the Steam App ID
 

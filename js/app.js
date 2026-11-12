@@ -323,7 +323,7 @@
 	let view = "";
 	function route() {
 		const h = location.hash || "#/";
-		const name = h.startsWith("#/guide") ? "guide" : h.startsWith("#/story") ? "story" : "home";
+		const name = h.startsWith("#/guide") ? "guide" : h.startsWith("#/story") ? "story" : h.startsWith("#/play") ? "play" : "home";
 		const anchor = h.includes("#", 1) ? h.slice(h.indexOf("#", 1)) : "";
 		const swap = () => {
 			$$(".view").forEach((v) => v.classList.toggle("on", v.id === "view-" + name));
@@ -339,6 +339,33 @@
 		$(".links").classList.remove("open");
 	}
 	const go = (h) => { if (location.hash === h) route(); else location.hash = h; };
+
+	// ---------- Play in the browser ------------------------------------------------------------
+	// The game (play/index.html) only loads when someone presses Start, so the
+	// rest of the site stays quick.
+	(() => {
+		const player = $("#player"), start = $("#player-start"), full = $("#player-full");
+		if (!player || !start) return;
+		start.addEventListener("click", () => {
+			const f = document.createElement("iframe");
+			f.src = "play/index.html";
+			f.title = "WyrdHollow: Part 1";
+			f.allow = "fullscreen; autoplay; gamepad";
+			f.allowFullscreen = true;
+			player.classList.add("running");
+			player.appendChild(f);
+			f.addEventListener("load", () => { try { f.contentWindow.focus(); } catch (e) {} });
+			full.disabled = false;
+		});
+		$$(".player-bar [data-to]").forEach((a) => a.addEventListener("click", (e) => {
+			e.preventDefault(); go("#/guide");
+			setTimeout(() => { const t = $("#" + a.dataset.to); if (t) t.scrollIntoView({ behavior: "smooth" }); }, 700);
+		}));
+		full.addEventListener("click", () => {
+			const f = $("iframe", player);
+			if (f && f.requestFullscreen) f.requestFullscreen().then(() => f.contentWindow.focus()).catch(() => {});
+		});
+	})();
 	addEventListener("hashchange", route);
 
 	// ---------- Reveal on scroll, header, parallax ----------------------------------------------
