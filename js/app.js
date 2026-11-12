@@ -347,6 +347,9 @@
 		const player = $("#player"), start = $("#player-start"), full = $("#player-full");
 		if (!player || !start) return;
 		start.addEventListener("click", () => {
+			// Phones: open the game on its own page so it fills the screen
+			// (an iPhone can't make part of a page fullscreen).
+			if (matchMedia("(pointer: coarse) and (hover: none)").matches) { location.href = "play/index.html"; return; }
 			const f = document.createElement("iframe");
 			f.src = "play/index.html";
 			f.title = "WyrdHollow: Part 1";

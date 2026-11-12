@@ -92,7 +92,7 @@ body {
 		</style>
 		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
 <link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
-<style>body{background:#07040c}</style>
+<style>body{background:#07040c}#rotate{display:none;position:fixed;inset:0;z-index:99;background:#07040c;color:#efe8ff;font:600 18px system-ui,sans-serif;align-items:center;justify-content:center;text-align:center;padding:24px;line-height:1.5}#rotate b{display:block;font-size:44px;color:#ffcf5a}@media (orientation:portrait) and (pointer:coarse){#rotate{display:flex}}</style><script>addEventListener('DOMContentLoaded',function(){var d=document.createElement('div');d.id='rotate';d.innerHTML='<div><b>&#8635;</b>Turn your phone sideways to play WyrdHollow</div>';document.body.appendChild(d);});addEventListener('touchend',function(){var e=document.documentElement;if(e.requestFullscreen&&!document.fullscreenElement){e.requestFullscreen().then(function(){if(screen.orientation&&screen.orientation.lock){screen.orientation.lock('landscape').catch(function(){});}}).catch(function(){});}},{once:true,passive:true});</script>
 	</head>
 	<body>
 		<canvas id="canvas">
@@ -111,7 +111,7 @@ body {
 
 		<script src="index.js"></script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":4902600,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"emscriptenPoolSize":8,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":true,"fileSizes":{"index.pck":4913672,"index.wasm":39514754},"focusCanvas":true,"gdextensionLibs":[],"godotPoolSize":4};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 

@@ -452,4 +452,4 @@ html.spoilers .spoil::after, .spoil.shown::after { display: none; }
 .player-bar { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 22px 0 50px; }
 .player-bar .btn[disabled] { opacity: 0.4; pointer-events: none; }
 .player-notes h3 { margin: 0 0 8px; font-family: var(--serif); }
-@media (pointer: coarse) and (hover: none) { .player-phone { display: flex; } .player { aspect-ratio: 1; } #player-full { display: none; } }
+@media (pointer: coarse) and (hover: none) { #player-full { display: none; } }

@@ -48,6 +48,8 @@ GitHub Desktop has no such limit:
 
 - It's a **release** build, so the Shift test shortcuts don't work in it.
 - Saves live in each player's browser, separate from the Steam version.
+- Phones and tablets get on-screen touch controls. On a phone, Start opens
+  the game on its own page so it fills the screen (turn it sideways).
 - GitHub's limit is 100 MB per file. The biggest file, `index.wasm`, is about
   40 MB.
 
