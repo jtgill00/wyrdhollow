@@ -13,7 +13,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=Silkscreen&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="css/style.css?v=12">
+	<link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body class="locked">
 	<div id="loader"><div class="sig"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div><p>WEAVING THE VALLEY…</p></div>
@@ -23,6 +23,8 @@
 	<div id="wipe"></div>
 	<div id="portal"></div>
 	<div id="cursor"></div><div id="cursor-dot"></div>
+	<div id="scrollbar"></div>
+	<canvas id="skyfall" aria-hidden="true"></canvas>
 
 	<header class="top">
 		<div class="wrap nav">
@@ -32,6 +34,7 @@
 				<a href="#/" data-view="home">Home</a>
 				<a href="#/#game" data-view="home">The Game</a>
 				<a href="#/#world" data-view="home">World</a>
+				<a href="#/#weather" data-view="home">Seasons</a>
 				<a href="#/#characters" data-view="home">Characters</a>
 				<a href="#/guide" data-view="guide">Guide</a>
 				<a href="#/story" data-view="story">Story</a>
@@ -107,6 +110,36 @@
 			</div>
 		</section>
 
+		<section id="weather" data-bg style="--bgimg:url(../assets/bg/game_garden.jpg)">
+			<div class="wrap">
+				<span class="kicker" data-reveal>Weather &amp; Seasons</span>
+				<h2 data-reveal>A valley that <span class="grad-text">changes with the sky.</span></h2>
+				<p class="lead" data-reveal>Four seasons repaint every tree, path and garden, and each morning brings its own weather. Pick a season, then pick the sky.</p>
+				<div class="tabs" id="season-tabs" data-reveal></div>
+				<div class="sky" data-reveal>
+					<div class="sky-left">
+					<div class="sky-stage" id="sky-stage" data-kind="rain">
+						<div class="sky-imgs" id="sky-imgs"></div>
+						<div class="sky-tint"></div>
+						<canvas id="sky-canvas"></canvas>
+						<div class="sky-flash" id="sky-flash"></div>
+						<span class="sky-label" id="sky-label"></span>
+					</div>
+					<p class="sky-note">The village is the real game in each season. The weather on top is drawn live by this page; the odds are the game's own.</p>
+					</div>
+					<div class="sky-panel">
+						<span class="sky-kicker" id="sky-season"></span>
+						<p class="sky-blurb swap" id="sky-blurb"></p>
+						<div class="forecast" id="forecast"></div>
+						<p class="sky-kind swap" id="sky-kind"></p>
+						<button class="btn ghost" id="sky-everywhere" type="button" aria-pressed="false">✨ Let it fall across the whole site</button>
+					</div>
+				</div>
+				<div class="grid g3" id="sky-facts" style="margin-top:40px"></div>
+				<div class="sky-shots" id="sky-shots"></div>
+			</div>
+		</section>
+
 		<section id="characters" data-bg style="--bgimg:url(../assets/bg/characters_broom.jpg)">
 			<div class="wrap">
 				<span class="kicker" data-reveal>The People</span>
@@ -141,6 +174,14 @@
 				<h2 data-reveal><span id="ach-count">33</span> to earn on <span class="grad-text">Steam.</span></h2>
 				<p class="lead" data-reveal>Hover or tap a badge to see what it asks of you.</p>
 				<div class="ach" id="ach" style="margin-top:40px"></div>
+			</div>
+		</section>
+
+		<section id="news" data-bg style="--bgimg:url(../assets/bg/world_portal.jpg)">
+			<div class="wrap">
+				<span class="kicker" data-reveal>Fresh from the workshop</span>
+				<h2 data-reveal>What's new <span class="grad-text">in the valley.</span></h2>
+				<div class="news" id="news-list" style="margin-top:40px"></div>
 			</div>
 		</section>
 
@@ -217,7 +258,7 @@
 		<div class="wrap">
 			<div class="cols">
 				<div><a class="brand" href="#/"><img src="assets/icon.png" alt="">WyrdHollow: Part 1</a><p style="max-width:360px">A pixel-art wizarding life sim. Created by JT.</p></div>
-				<div><b style="color:var(--ink)">Explore</b><br><a href="#/#game">The Game</a><br><a href="#/#world">World</a><br><a href="#/guide">Guide</a><br><a href="#/story">Story</a><br><a href="#/play">Play</a></div>
+				<div><b style="color:var(--ink)">Explore</b><br><a href="#/#game">The Game</a><br><a href="#/#world">World</a><br><a href="#/#weather">Seasons</a><br><a href="#/guide">Guide</a><br><a href="#/story">Story</a><br><a href="#/play">Play</a></div>
 				<div><b style="color:var(--ink)">Follow</b><br><a data-steam href="#">Steam</a><br><a href="#/#achievements">Achievements</a></div>
 			</div>
 			<p class="legal">© <span id="year"></span> JT. WyrdHollow and all its characters are original works. Steam and the Steam logo are trademarks of Valve Corporation. Made with the Godot Engine.</p>
@@ -227,8 +268,8 @@
 	<div id="lightbox"><div><img alt=""><p></p></div></div>
 	<div id="person-modal"><div class="box"></div></div>
 
-	<script src="js/data.js?v=12"></script>
-	<script src="js/content.js?v=12"></script>
-	<script src="js/app.js?v=12"></script>
+	<script src="js/data.js?v=13"></script>
+	<script src="js/content.js?v=13"></script>
+	<script src="js/app.js?v=13"></script>
 </body>
 </html>

@@ -392,6 +392,195 @@
 	addEventListener("scroll", onScroll, { passive: true });
 	addEventListener("resize", onScroll);
 
+	// ---------- Weather: a little particle sky ------------------------------------------------
+	// makeSky(canvas, { ground }) draws rain, snow, wind, sunbeams or a fair day.
+	// With `ground`, rain splashes and leaves puddles that dry after it stops.
+	function makeSky(canvas, opt = {}) {
+		const x = canvas.getContext("2d");
+		const LEAF = { spring: ["#ffc4dc", "#ffe1ec", "#f9a8c8"], summer: ["#7ccf6a", "#a5e08a", "#4fae52"], autumn: ["#e8742c", "#d9a521", "#c2452d", "#f0c14a"], winter: ["#ffffff", "#dbeaff"] };
+		const rnd = (a, b) => a + Math.random() * (b - a);
+		let w = 0, h = 0, dpr = 1, kind = "clear", season = "spring", parts = [], rings = [], puddles = [], wet = 0, t = 0, last = 0, raf = 0, on = false;
+		const spawn = (any) => {
+			const c = LEAF[season][Math.floor(Math.random() * LEAF[season].length)];
+			if (kind === "rain") return { x: rnd(-0.15 * w, 1.05 * w), y: any ? rnd(0, h) : rnd(-60, -5), v: rnd(820, 1250), l: rnd(12, 22), a: rnd(0.35, 0.7), end: opt.ground ? rnd(h * 0.5, h) : h + 30 };
+			if (kind === "snow") return { x: rnd(0, w), y: any ? rnd(0, h) : -6, v: rnd(26, 70), r: rnd(1, 3.2), ph: rnd(0, 6.28), a: rnd(0.55, 1) };
+			if (kind === "windy") return Math.random() < 0.45
+				? { s: 1, x: any ? rnd(0, w) : -120, y: rnd(0, h), v: rnd(520, 820), l: rnd(40, 110), a: rnd(0.08, 0.22), ph: rnd(0, 6.28) }
+				: { x: any ? rnd(0, w) : -12, y: rnd(-0.1 * h, h), v: rnd(240, 420), vy: rnd(-20, 60), r: rnd(3, 6), rot: rnd(0, 6.28), vr: rnd(-7, 7), ph: rnd(0, 6.28), c };
+			if (kind === "sunny") return { x: rnd(0, w), y: any ? rnd(0, h) : h + 4, v: rnd(6, 18), r: rnd(0.8, 2), ph: rnd(0, 6.28), a: rnd(0.3, 0.8) };
+			return { x: rnd(0, w), y: any ? rnd(0, h) : -10, v: rnd(28, 55), r: rnd(3, 5), rot: rnd(0, 6.28), vr: rnd(-2, 2), ph: rnd(0, 6.28), c };
+		};
+		const seed = () => {
+			const a = w * h;
+			const n = kind === "rain" ? Math.min(260, a / 2600) : kind === "snow" ? Math.min(170, a / 4200) : kind === "windy" ? Math.min(70, a / 11000)
+				: kind === "sunny" ? Math.min(40, a / 20000) : (season === "autumn" || season === "spring") ? Math.min(14, a / 50000) : 0;
+			parts = Array.from({ length: Math.floor(n) }, () => spawn(true));
+			rings = [];
+		};
+		const resize = () => {
+			const r = canvas.getBoundingClientRect();
+			if (!r.width || !r.height) return;
+			dpr = Math.min(devicePixelRatio || 1, 2); w = r.width; h = r.height;
+			canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+			puddles = opt.ground ? [[0.16, 0.9, 0.09], [0.34, 0.74, 0.06], [0.52, 0.92, 0.11], [0.63, 0.7, 0.05], [0.78, 0.84, 0.08], [0.92, 0.95, 0.07], [0.08, 0.68, 0.045]] : [];
+			seed();
+		};
+		const leaf = (p) => { x.save(); x.translate(p.x, p.y); x.rotate(p.rot); x.fillStyle = p.c; x.globalAlpha = 0.9; x.beginPath(); x.ellipse(0, 0, p.r, p.r * 0.55, 0, 0, 6.283); x.fill(); x.restore(); };
+		const frame = (now) => {
+			raf = requestAnimationFrame(frame);
+			const dt = Math.min(0.05, (now - last) / 1000 || 0); last = now; t += dt;
+			x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, w, h);
+			// Puddles: fill while it rains, dry afterwards.
+			wet = kind === "rain" ? Math.min(1, wet + dt / 5) : Math.max(0, wet - dt / 9);
+			if (wet > 0.01) for (const [px, py, pr] of puddles) {
+				const rx = pr * w * Math.sqrt(wet), ry = rx * 0.32;
+				x.fillStyle = `rgba(40,58,96,${0.34 * wet})`; x.beginPath(); x.ellipse(px * w, py * h, rx * 1.12, ry * 1.2, 0, 0, 6.283); x.fill();
+				x.fillStyle = `rgba(126,170,232,${0.42 * wet})`; x.beginPath(); x.ellipse(px * w, py * h, rx, ry, 0, 0, 6.283); x.fill();
+				x.fillStyle = `rgba(226,240,255,${0.3 * wet})`; x.beginPath(); x.ellipse(px * w - rx * 0.3, py * h - ry * 0.25, rx * 0.3, ry * 0.2, 0, 0, 6.283); x.fill();
+				if (kind === "rain" && Math.random() < dt * 2.2) rings.push({ x: px * w + rnd(-rx, rx) * 0.7, y: py * h + rnd(-ry, ry) * 0.6, r: 1, a: 0.7 });
+			}
+			if (kind === "sunny") for (let k = 0; k < 5; k++) {
+				const a = 0.07 + 0.05 * Math.sin(t * 0.6 + k * 1.7), bx = w * (0.02 + k * 0.21), bw = w * 0.09, lean = h * 0.55;
+				const g = x.createLinearGradient(bx, 0, bx + lean, h); g.addColorStop(0, `rgba(255,232,160,${a})`); g.addColorStop(1, "rgba(255,232,160,0)");
+				x.fillStyle = g; x.beginPath(); x.moveTo(bx, 0); x.lineTo(bx + bw, 0); x.lineTo(bx + bw * 2.2 + lean, h); x.lineTo(bx + lean - bw * 0.4, h); x.fill();
+			}
+			x.lineCap = "round";
+			for (let i = 0; i < parts.length; i++) {
+				const p = parts[i];
+				let gone = false;
+				if (kind === "rain") {
+					p.y += p.v * dt; p.x += p.v * 0.22 * dt;
+					x.strokeStyle = `rgba(178,208,255,${p.a})`; x.lineWidth = 1.3;
+					x.beginPath(); x.moveTo(p.x, p.y); x.lineTo(p.x - p.l * 0.22, p.y - p.l); x.stroke();
+					if (p.y > p.end) { gone = true; if (opt.ground && rings.length < 60) rings.push({ x: p.x, y: p.end, r: 1, a: 0.55 }); }
+				} else if (kind === "snow") {
+					p.y += p.v * dt; p.x += Math.sin(t * 0.9 + p.ph) * 14 * dt + 6 * dt;
+					x.fillStyle = `rgba(255,255,255,${p.a})`; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 6.283); x.fill();
+					gone = p.y > h + 6;
+				} else if (kind === "windy" && p.s) {
+					p.x += p.v * dt;
+					const yy = p.y + Math.sin(t * 2 + p.ph) * 8;
+					x.strokeStyle = `rgba(255,255,255,${p.a})`; x.lineWidth = 1.4;
+					x.beginPath(); x.moveTo(p.x, yy); x.quadraticCurveTo(p.x + p.l * 0.5, yy - 5, p.x + p.l, yy + 2); x.stroke();
+					gone = p.x > w + 20;
+				} else if (kind === "windy") {
+					p.x += p.v * dt; p.y += (p.vy + Math.sin(t * 3 + p.ph) * 60) * dt; p.rot += p.vr * dt; leaf(p);
+					gone = p.x > w + 20 || p.y > h + 20;
+				} else if (kind === "sunny") {
+					p.y -= p.v * dt; p.x += Math.sin(t + p.ph) * 6 * dt;
+					x.fillStyle = `rgba(255,236,170,${p.a * (0.6 + 0.4 * Math.sin(t * 2 + p.ph))})`; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 6.283); x.fill();
+					gone = p.y < -6;
+				} else {
+					p.y += p.v * dt; p.x += Math.sin(t * 1.3 + p.ph) * 26 * dt; p.rot += p.vr * dt; leaf(p);
+					gone = p.y > h + 12;
+				}
+				if (gone) parts[i] = spawn(false);
+			}
+			for (let i = rings.length - 1; i >= 0; i--) {
+				const r = rings[i]; r.r += 26 * dt; r.a -= 1.6 * dt;
+				if (r.a <= 0) { rings.splice(i, 1); continue; }
+				x.strokeStyle = `rgba(214,232,255,${r.a})`; x.lineWidth = 1; x.beginPath(); x.ellipse(r.x, r.y, r.r, r.r * 0.38, 0, 0, 6.283); x.stroke();
+			}
+		};
+		return {
+			set(k, s) { const changed = k !== kind || s !== season; kind = k; season = s; if (changed) seed(); },
+			start() { if (on || reduced) return; on = true; resize(); last = performance.now(); raf = requestAnimationFrame(frame); },
+			stop() { on = false; cancelAnimationFrame(raf); x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, canvas.width, canvas.height); },
+			resize,
+		};
+	}
+
+	// ---------- Weather & Seasons section --------------------------------------------------------
+	(() => {
+		const W = SITE.weather, stage = $("#sky-stage");
+		if (!W || !stage) return;
+		const sky = makeSky($("#sky-canvas"), { ground: true });
+		const everywhere = makeSky($("#skyfall"));
+		let si = 0, kind = "rain", z = 1, all = false;
+		$("#sky-imgs").innerHTML = W.seasons.map((s, i) => `<img src="${s.img}" alt="WyrdHollow Village in ${esc(s.name.toLowerCase())}" ${i ? 'loading="lazy"' : ""}>`).join("");
+		const imgs = $$("#sky-imgs img");
+		$("#season-tabs").innerHTML = W.seasons.map((s, i) => `<button data-s="${i}">${s.icon} ${esc(s.name.toUpperCase())}</button>`).join("");
+		$("#sky-facts").innerHTML = W.facts.map((f, i) => `<div class="card tilt" data-reveal style="transition-delay:${i * 60}ms"><div class="glare"></div><div class="ico">${f[0]}</div><h3>${esc(f[1])}</h3><p>${esc(f[2])}</p></div>`).join("");
+		$("#sky-shots").innerHTML = W.shots.map((s, i) => `<figure class="sky-shot" data-i="${i}" data-reveal style="transition-delay:${i * 70}ms"><img src="${s[0]}" alt="${esc(s[1])}" loading="lazy"><figcaption>${esc(s[1])}</figcaption></figure>`).join("");
+		const lb = $("#lightbox");
+		$$(".sky-shot").forEach((f) => f.addEventListener("click", () => { const d = W.shots[f.dataset.i]; $("img", lb).src = d[0]; $("p", lb).textContent = d[1]; lb.classList.add("open"); }));
+
+		const render = () => {
+			const s = W.seasons[si], k = W.kinds[kind];
+			$$("#season-tabs button").forEach((b, i) => b.classList.toggle("on", i === si));
+			$("#sky-season").textContent = `${s.name.toUpperCase()} FORECAST`;
+			$("#sky-blurb").textContent = s.blurb;
+			$("#forecast").innerHTML = s.chances.map(([id, pct]) => `<button class="fc${id === kind ? " on" : ""}" data-k="${id}"><span class="fc-i">${W.kinds[id].icon}</span><span class="fc-n">${esc(W.kinds[id].name)}</span><span class="fc-bar"><i style="--p:${pct}%"></i></span><b>${pct}%</b></button>`).join("");
+			$$("#forecast .fc").forEach((b) => b.addEventListener("click", () => { setKind(b.dataset.k); }));
+			requestAnimationFrame(() => $$("#forecast .fc-bar i").forEach((i) => i.classList.add("in")));
+			$("#sky-kind").innerHTML = `<b>${k.icon} ${esc(k.name)}.</b> ${esc(k.text)}`;
+			$("#sky-label").textContent = `${s.name.toUpperCase()} · ${k.name.toUpperCase()}`;
+			stage.dataset.kind = kind; stage.dataset.season = s.id;
+			sky.set(kind, s.id);
+			if (all) everywhere.set(kind, s.id);
+		};
+		const setKind = (k) => {
+			if (k === kind) return;
+			kind = k;
+			const f = $("#sky-flash"); f.classList.remove("go"); void f.offsetWidth; f.classList.add("go");
+			render();
+		};
+		const setSeason = (i, e) => {
+			if (i === si) return;
+			si = i;
+			const r = stage.getBoundingClientRect(), px = e ? ((e.clientX - r.left) / r.width) * 100 : 50, py = e ? 0 : 50;
+			const im = imgs[i]; im.style.zIndex = ++z;
+			if (!reduced && im.animate) im.animate([{ clipPath: `circle(0% at ${px}% ${py}%)` }, { clipPath: `circle(150% at ${px}% ${py}%)` }], { duration: 1000, easing: "cubic-bezier(0.2, 0.8, 0.1, 1)" });
+			const allowed = W.seasons[i].chances.map((c) => c[0]);
+			if (!allowed.includes(kind)) kind = allowed.find((k) => k !== "clear") || allowed[0];
+			render();
+		};
+		$$("#season-tabs button").forEach((b) => b.addEventListener("click", (e) => setSeason(+b.dataset.s, e)));
+
+		// A little depth: the picture and the weather shift apart under the pointer.
+		stage.addEventListener("pointermove", (e) => { const r = stage.getBoundingClientRect(); stage.style.setProperty("--px", ((e.clientX - r.left) / r.width - 0.5).toFixed(3)); stage.style.setProperty("--py", ((e.clientY - r.top) / r.height - 0.5).toFixed(3)); });
+		stage.addEventListener("pointerleave", () => { stage.style.setProperty("--px", 0); stage.style.setProperty("--py", 0); });
+
+		// Only animate the stage while it's on screen.
+		new IntersectionObserver((es) => es.forEach((en) => en.isIntersecting ? sky.start() : sky.stop()), { threshold: 0.05 }).observe(stage);
+		addEventListener("resize", () => { sky.resize(); if (all) everywhere.resize(); });
+
+		// "Let it fall across the whole site"
+		const btn = $("#sky-everywhere");
+		btn.addEventListener("click", () => {
+			all = !all;
+			document.body.classList.toggle("skyfall-on", all);
+			btn.setAttribute("aria-pressed", all);
+			btn.textContent = all ? "☁️ Clear the skies again" : "✨ Let it fall across the whole site";
+			if (all) { everywhere.set(kind, W.seasons[si].id); everywhere.start(); } else everywhere.stop();
+		});
+		render();
+	})();
+
+	// ---------- What's new ----------------------------------------------------------------------
+	if (SITE.news && $("#news-list")) {
+		$("#news-list").innerHTML = SITE.news.map((n, i) => `<${n[3] ? `a href="${n[3]}"` : "div"} class="news-item" data-reveal style="transition-delay:${i * 70}ms"><span class="news-n">${String(i + 1).padStart(2, "0")}</span><span class="news-ico">${n[0]}</span><span><b>${esc(n[1])}</b><small>${esc(n[2])}</small></span>${n[3] ? '<i class="news-go">→</i>' : ""}</${n[3] ? "a" : "div"}>`).join("");
+	}
+
+	// ---------- Sparks: every click or tap casts a little spell ----------------------------------
+	if (!reduced) addEventListener("pointerdown", (e) => {
+		if (e.target.closest && e.target.closest(".player, #lightbox, #person-modal")) return;
+		const n = 14, hue = root.dataset.path === "hollow" ? ["#b47cff", "#ff4fd8", "#e7d4ff"] : ["#ffcf5a", "#ff9a3d", "#fff3c4"];
+		for (let i = 0; i < n; i++) {
+			const s = el("i", "spark"), a = (i / n) * 6.283 + Math.random() * 0.5, d = 26 + Math.random() * 52;
+			s.style.left = e.clientX + "px"; s.style.top = e.clientY + "px"; s.style.background = hue[i % 3]; s.style.boxShadow = `0 0 8px ${hue[i % 3]}`;
+			document.body.appendChild(s);
+			s.animate([{ transform: "translate(-50%, -50%) scale(1)", opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d + 14}px)) scale(0)`, opacity: 0 }], { duration: 520 + Math.random() * 320, easing: "cubic-bezier(0.1, 0.8, 0.2, 1)" }).onfinish = () => s.remove();
+		}
+		const ring = el("i", "spark-ring"); ring.style.left = e.clientX + "px"; ring.style.top = e.clientY + "px"; document.body.appendChild(ring);
+		ring.animate([{ transform: "translate(-50%, -50%) scale(0.2)", opacity: 0.9 }, { transform: "translate(-50%, -50%) scale(1)", opacity: 0 }], { duration: 480, easing: "ease-out" }).onfinish = () => ring.remove();
+	}, { passive: true });
+
+	// ---------- Reading progress along the top ---------------------------------------------------
+	const bar = $("#scrollbar");
+	const progress = () => { const max = document.documentElement.scrollHeight - innerHeight; bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`; };
+	addEventListener("scroll", progress, { passive: true }); addEventListener("resize", progress);
+
 	// Magnetic buttons
 	$$(".magnet").forEach((b) => {
 		b.addEventListener("pointermove", (e) => { const r = b.getBoundingClientRect(); b.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.25}px, ${(e.clientY - r.top - r.height / 2) * 0.35}px)`; });

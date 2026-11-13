@@ -9,6 +9,49 @@ window.SITE = {
 
 	marquee: ["Six Seals", "One Crown", "Light or Shadow", "Brew", "Duel", "Fly", "Fish", "Fall in Love", "The Weave Remembers"],
 
+	// Weather and seasons. The chances are the game's own (WeatherRules.CHANCES):
+	// keep them in step if the game's odds change.
+	weather: {
+		seasons: [
+			{ id: "spring", name: "Spring", icon: "🌸", img: "assets/weather/season_0_village.jpg", blurb: "Blossom on every tree, petals on the breeze, and plenty of showers to water the garden for you.", chances: [["rain", 35], ["windy", 15], ["sunny", 10], ["clear", 40]] },
+			{ id: "summer", name: "Summer", icon: "☀️", img: "assets/weather/season_1_village.jpg", blurb: "The sun is out more days than not. The trees are full and green, and the apple and mulberry trees hang with fruit.", chances: [["sunny", 55], ["rain", 15], ["windy", 10], ["clear", 20]] },
+			{ id: "autumn", name: "Autumn", icon: "🍂", img: "assets/weather/season_2_village.jpg", blurb: "The valley turns gold and red. Leaves fall all season long, and the windiest days send them racing.", chances: [["windy", 35], ["rain", 30], ["clear", 35]] },
+			{ id: "winter", name: "Winter", icon: "❄️", img: "assets/weather/season_3_village.jpg", blurb: "Bare branches, snowy pines and white paths. Snow falls most days, and all day long at the Frostglow festival.", chances: [["snow", 55], ["windy", 10], ["clear", 35]] },
+		],
+		kinds: {
+			rain: { name: "Rain", icon: "🌧️", text: "Rain waters your whole garden for you. Puddles gather on open ground while it falls, then dry up once it stops." },
+			snow: { name: "Snow", icon: "❄️", text: "Winter only. Flakes drift down over the snowy ground, and the valley goes quiet." },
+			windy: { name: "Wind", icon: "🍃", text: "Trees sway faster, and the wind carries whatever the season has: petals, leaves or powder snow." },
+			sunny: { name: "Sunshine", icon: "☀️", text: "Warm light and slanting sunbeams from morning until early evening, with dust motes drifting through them." },
+			clear: { name: "Fair", icon: "⛅", text: "A calm, fair day. In autumn the leaves still fall, and festival days are always fair." },
+		},
+		facts: [
+			["💧", "Rain does the watering", "When the rain starts, every crop in your garden is watered for the day. Put the watering can down and go fishing."],
+			["🪞", "Puddles come and go", "Puddles fill over the first hour of rain, ripple while it falls, and dry up a couple of hours after it stops."],
+			["🌳", "Trees keep the calendar", "Blossom in spring, deep green in summer, gold and red in autumn, bare branches in winter. Pines wear snow, and fruit trees only fruit in summer and autumn."],
+			["🧭", "Read the sky at a glance", "A little weather icon sits on your minimap, so you always know what today is doing."],
+			["🔊", "Hear it from indoors", "Rain patters and wind sighs outside. Step into your cottage and they soften to a murmur."],
+			["🎉", "Festivals stay fair", "Festival days are always fine weather, except Frostglow, when it snows from dawn to dusk."],
+		],
+		shots: [
+			["assets/weather/rain_village.jpg", "Rain over WyrdHollow Village"],
+			["assets/weather/rain_after.jpg", "After the rain: puddles drying at the cottage"],
+			["assets/weather/sunny_summer.jpg", "Summer sunbeams"],
+			["assets/weather/windy_autumn.jpg", "A windy autumn day"],
+			["assets/weather/snow_wilds.jpg", "Snow in Fernhallow Wilds"],
+		],
+	},
+
+	// "What's new": newest first. [icon, title, text, optional link]
+	news: [
+		["🌦️", "Weather and seasons", "Rain with puddles, snow, wind and summer sun, and a valley that changes through all four seasons.", "#/#weather"],
+		["▶️", "Play in your browser", "The whole game now runs right here on the site, free, while it makes its way to Steam.", "#/play"],
+		["📱", "Phones and tablets", "On-screen touch controls: a thumb-stick, tap-to-aim casting and big, easy buttons. Add it to your Home Screen to play full screen.", "#/play"],
+		["💾", "Three save slots", "Keep three stories going at once. Each slot shows your hero, the date and your Gleam."],
+		["🏡", "A cottage worth mending", "Every stage of restoring Thistlewick Cottage is now a big change you can see, from ruin to manor."],
+		["🦉", "Inside the Owl Tower", "Step inside Tamsin's owl tower and climb its stairs. Your familiars have a new table and screen of their own, too."],
+	],
+
 	features: [
 		["🏡", "Restore your cottage", "Wake Pip the hearth sprite, mend Thistlewick Cottage from ruin to manor, tend a garden through four seasons."],
 		["⚔️", "Duels that feel great", "Fast top-down magic duels: aim, ward, dodge-roll. Reflect spells with a perfect ward and land a Focus Finisher."],
