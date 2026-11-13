@@ -67,6 +67,20 @@ example `"https://store.steampowered.com/app/1234567/WyrdHollow_Part_1/"`.
 Every "Wishlist" button then goes there. Until then they say
 "Steam page coming soon".
 
+## Ad tracking and the cookie banner
+
+`js/tracking.js` counts visits and how many people press **Start** on the Play
+page, so we can tell which Google and Meta ads bring real players. Open it and
+paste your two IDs at the top:
+
+- `GA_ID`: the Google Analytics Measurement ID (`G-...`)
+- `PIXEL_ID`: the Meta Pixel ID (a long number)
+
+While both are empty it does nothing. Once filled in, visitors see a cookie
+banner first and nothing loads unless they press **Accept** (UK/EU law).
+"Cookie settings" appears in the footer so they can change their mind.
+The Start press is sent as `play_started` (Google) and `PlayStarted` (Meta).
+
 ## Updating it
 
 - **Words** (features, guide pages, FAQ, story, walkthrough hints):

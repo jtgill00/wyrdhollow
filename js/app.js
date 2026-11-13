@@ -349,7 +349,14 @@
 		start.addEventListener("click", () => {
 			// Phones: open the game on its own page so it fills the screen
 			// (an iPhone can't make part of a page fullscreen).
-			if (matchMedia("(pointer: coarse) and (hover: none)").matches) { location.href = "play/index.html"; return; }
+			// Count the play for the ads (only if the visitor accepted cookies).
+			if (window.WHTrack) WHTrack.event("play_started");
+			if (matchMedia("(pointer: coarse) and (hover: none)").matches) {
+				// A short pause lets the "play started" count get sent before the page changes.
+				const wait = window.WHTrack && WHTrack.active() ? 300 : 0;
+				setTimeout(() => { location.href = "play/index.html"; }, wait);
+				return;
+			}
 			const f = document.createElement("iframe");
 			f.src = "play/index.html";
 			f.title = "WyrdHollow: Part 1";
