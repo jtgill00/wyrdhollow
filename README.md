@@ -20,6 +20,13 @@ build step and no libraries. It works straight from GitHub Pages.
    (Name the repository `<your-username>.github.io` and it lives at that
    address instead.)
 
+## The address: www.wyrdhollow.com
+
+The domain is registered at Cloudflare. The `CNAME` file in this folder tells
+GitHub Pages the site's name: don't delete it. Cloudflare's DNS has four `A`
+records for `wyrdhollow.com` (185.199.108-111.153) and a `CNAME` for `www`
+pointing at `jtgill00.github.io`, all set to "DNS only" (grey cloud).
+
 ## The playable game (Play page)
 
 The `play/` folder is the whole game, built for web browsers (about 45 MB).
