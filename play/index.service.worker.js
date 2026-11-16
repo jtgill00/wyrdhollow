@@ -4,7 +4,7 @@
 // Incrementing CACHE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 /** @type {string} */
-const CACHE_VERSION = '1794844342|3038065';
+const CACHE_VERSION = '1794863438|2397894';
 /** @type {string} */
 const CACHE_PREFIX = 'WyrdHollow-sw-cache-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;
