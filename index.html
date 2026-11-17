@@ -13,7 +13,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=Silkscreen&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="css/style.css?v=16">
+	<link rel="stylesheet" href="css/style.css?v=17">
 </head>
 <body class="locked">
 	<div id="loader"><div class="sig"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div><p>WEAVING THE VALLEY…</p></div>
@@ -33,9 +33,10 @@
 			<nav class="links">
 				<a href="#/" data-view="home">Home</a>
 				<a href="#/#game" data-view="home">The Game</a>
-				<a href="#/#world" data-view="home">World</a>
 				<a href="#/#weather" data-view="home">Seasons</a>
 				<a href="#/#characters" data-view="home">Characters</a>
+				<a href="#/map" data-view="map">Map</a>
+				<a href="#/compendium" data-view="compendium">Compendium</a>
 				<a href="#/guide" data-view="guide">Guide</a>
 				<a href="#/story" data-view="story">Story</a>
 				<a href="#/play" data-view="play">Play</a>
@@ -102,11 +103,12 @@
 			<div class="wrap">
 				<span class="kicker" data-reveal>The World</span>
 				<h2 data-reveal>A valley that <span class="grad-text">opens in rings.</span></h2>
-				<p class="lead" data-reveal>Fifteen places, each unlocked by what you learn, brew, befriend or earn. Tap a light on the map.</p>
-				<div class="map-wrap" style="margin-top:40px" data-reveal>
-					<div class="map" id="map"><svg viewBox="0 0 100 100" preserveAspectRatio="none" id="map-lines"></svg></div>
-					<div class="place-panel" id="place"></div>
-				</div>
+				<p class="lead" data-reveal>Twenty-three places from Thistlewick Cottage to the black glass tower, each unlocked by what you learn, brew, befriend or earn. Gold names lean to the light, violet to the shadow.</p>
+				<a class="map-teaser" href="#/map" data-reveal>
+					<img src="assets/atlas/map_small.jpg" alt="The painted map of the Valley of WyrdHollow" loading="lazy" width="1300" height="975">
+					<span class="map-teaser-cta"><b>Open the map</b><small>Tap any place to see who and what you'll find there</small></span>
+				</a>
+				<div class="hero-ctas" style="margin-top:28px" data-reveal><a class="btn magnet" href="#/map">Explore the map</a><a class="btn ghost magnet" href="#/compendium">Creatures, peoples, brooms &amp; wands</a></div>
 			</div>
 		</section>
 
@@ -144,7 +146,7 @@
 			<div class="wrap">
 				<span class="kicker" data-reveal>The People</span>
 				<h2 data-reveal>Friends, rivals, <span class="grad-text">and something worse.</span></h2>
-				<p class="lead" data-reveal>Befriend them, romance three of them, fight beside them, or against them. Tap anyone to meet them.</p>
+				<p class="lead" data-reveal>You are Alder Fairweather. Befriend them, romance three of them, fight beside them, or against them. Tap anyone to meet them.</p>
 				<div class="cast" id="cast" style="margin-top:40px"></div>
 			</div>
 		</section>
@@ -214,6 +216,42 @@
 		</section>
 	</div>
 
+	<!-- ============================ MAP ============================ -->
+	<div class="view bg-top" id="view-map" data-bg style="--bgimg:url(../assets/bg/world_portal.jpg)">
+		<div class="page-hero wrap">
+			<span class="kicker">The Map</span>
+			<h1 class="grad-text">The Valley of WyrdHollow</h1>
+			<p class="lead" style="margin:0 auto">From Thistlewick to the black glass tower. Tap a light on the map, or pick a name from the list, to see what a place is, how to reach it, and who and what you may meet there.</p>
+		</div>
+		<div class="wrap wide">
+			<div class="atlas-bar">
+				<div class="tabs" id="atlas-filter" style="margin:0"></div>
+				<div class="atlas-zoom"><button type="button" id="atlas-out" aria-label="Zoom out">−</button><button type="button" id="atlas-in" aria-label="Zoom in">+</button><button type="button" id="atlas-full">VIEW WHOLE MAP</button></div>
+			</div>
+			<div class="atlas">
+				<div class="atlas-frame" id="atlas-frame">
+					<div class="atlas-map" id="atlas-map"><img src="assets/atlas/map.jpg" alt="A painted map of the Valley of WyrdHollow and the lands about it" width="2600" height="1950"></div>
+				</div>
+				<aside class="atlas-card" id="atlas-card" aria-live="polite"></aside>
+			</div>
+			<p class="atlas-hint">On a phone, drag the map sideways. Gold lights lean to the light, violet to the shadow, silver to neither.</p>
+			<div class="atlas-index" id="atlas-index"></div>
+		</div>
+	</div>
+
+	<!-- ============================ COMPENDIUM ============================ -->
+	<div class="view bg-top" id="view-compendium" data-bg style="--bgimg:url(../assets/bg/familiars_fox.jpg)">
+		<div class="page-hero wrap">
+			<span class="kicker">A Field Compendium</span>
+			<h1 class="grad-text">What things are.</h1>
+			<p class="lead" style="margin:0 auto">The creatures, the peoples and their schools, brooms, wands, the six Seals and the black glass tower. Painted plates by JT; tap any picture to see the whole page, and its pencil sketch.</p>
+		</div>
+		<div class="wrap">
+			<div class="tabs comp-tabs" id="comp-tabs"></div>
+			<div id="comp-body"></div>
+		</div>
+	</div>
+
 	<!-- ============================ GUIDE ============================ -->
 	<div class="view bg-top" id="view-guide" data-bg style="--bgimg:url(../assets/bg/guide_runes.jpg)">
 		<div class="page-hero wrap">
@@ -266,7 +304,7 @@
 			</div>
 			<div class="grid g3 player-notes">
 				<div class="card"><div class="ico">💾</div><h3>Your saves</h3><p>Your game saves in this browser as you play, in any of three slots. Clearing your browsing data or switching browsers starts you fresh.</p></div>
-				<div class="card"><div class="ico">🎮</div><h3>Controls</h3><p><b>Computer:</b> WASD to move, mouse to aim, E to talk and use, Esc to pause. Controllers work too.<br><b>Phone or tablet:</b> turn it sideways. Left thumb walks; tap Cast to fire at the nearest foe, or drag it to aim. Tap to read on.</p></div>
+				<div class="card"><div class="ico">🎮</div><h3>Controls</h3><p><b>Computer:</b> WASD to move, mouse to aim, E to talk and use, Esc to pause. Controllers work too.<br><b>Phone or tablet:</b> turn it sideways. Left thumb walks; tap anywhere on the open screen to cast at that spot, and hold to keep casting. Tap to read on.</p></div>
 				<div class="card"><div class="ico">⏸️</div><h3>Taking a break</h3><p>Press Esc to pause before you wander off to another page. Closing the tab is fine: your progress is saved.</p></div>
 			</div>
 		</div>
@@ -277,7 +315,7 @@
 		<div class="wrap">
 			<div class="cols">
 				<div><a class="brand" href="#/"><img src="assets/icon.png" alt="">WyrdHollow: Part 1</a><p style="max-width:360px">A pixel-art wizarding life sim. Created by JT.</p></div>
-				<div><b style="color:var(--ink)">Explore</b><br><a href="#/#game">The Game</a><br><a href="#/#world">World</a><br><a href="#/#weather">Seasons</a><br><a href="#/guide">Guide</a><br><a href="#/story">Story</a><br><a href="#/#achievements">Achievements</a></div>
+				<div><b style="color:var(--ink)">Explore</b><br><a href="#/#game">The Game</a><br><a href="#/map">The Map</a><br><a href="#/compendium">Compendium</a><br><a href="#/#weather">Seasons</a><br><a href="#/guide">Guide</a><br><a href="#/story">Story</a><br><a href="#/#achievements">Achievements</a></div>
 				<div><b style="color:var(--ink)">Play</b><br><a href="#/play">In your browser</a><br><a href="https://jtgill00.itch.io/wyrdhollow" target="_blank" rel="noopener">itch.io</a><br><span>App Store (coming soon)</span><br><a data-steam href="#">Steam</a></div>
 				<div><b style="color:var(--ink)">Follow</b><br><a href="https://www.tiktok.com/@wyrdhollow" target="_blank" rel="noopener">TikTok</a><br><a href="https://www.instagram.com/wyrdhollowmagic/" target="_blank" rel="noopener">Instagram</a><br><a href="https://www.facebook.com/wyrdhollow/" target="_blank" rel="noopener">Facebook</a><br><a href="privacy.html">Privacy</a><br><a href="#" data-cookie-settings hidden>Cookie settings</a></div>
 			</div>
@@ -285,12 +323,13 @@
 		</div>
 	</footer>
 
-	<div id="lightbox"><div><img alt=""><p></p></div></div>
+	<div id="lightbox"><div><img alt=""><p></p><button type="button" class="btn ghost" id="lb-alt" hidden>See the pencil sketch</button></div></div>
 	<div id="person-modal"><div class="box"></div></div>
 
 	<script src="js/tracking.js?v=15"></script>
-	<script src="js/data.js?v=13"></script>
-	<script src="js/content.js?v=13"></script>
-	<script src="js/app.js?v=14"></script>
+	<script src="js/data.js?v=14"></script>
+	<script src="js/content.js?v=14"></script>
+	<script src="js/world.js?v=1"></script>
+	<script src="js/app.js?v=15"></script>
 </body>
 </html>

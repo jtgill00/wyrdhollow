@@ -44,6 +44,11 @@ window.SITE = {
 
 	// "What's new": newest first. [icon, title, text, optional link]
 	news: [
+		["🗺️", "The whole valley, mapped", "JT's painted map of the valley, with a light on every place. Tap one to see what it is, how to reach it, and who and what you'll meet there.", "#/map"],
+		["📖", "A Field Compendium", "Painted plates of the creatures, brooms, wands and Seals, the black glass tower, and the peoples and schools beyond the valley.", "#/compendium"],
+		["🪡", "Linnet Evermoor", "A new best friend on the village well, with heart scenes of her own, a part in the main story and a moment in all four endings.", "#/#characters"],
+		["🧭", "Strangers from beyond the valley", "Five travellers cross your path, each from a people the valley has half forgotten. Find Sefa Lintel by the well to begin.", "#/compendium/peoples"],
+		["👆", "Tap anywhere to cast", "On phones and tablets, tap the open screen to cast at that spot and hold to keep casting. The thumb-stick and every button stay where they were.", "#/play"],
 		["🌦️", "Weather and seasons", "Rain with puddles, snow, wind and summer sun, and a valley that changes through all four seasons.", "#/#weather"],
 		["▶️", "Play in your browser", "The whole game now runs right here on the site, free, while it makes its way to Steam.", "#/play"],
 		["📱", "Phones and tablets", "On-screen touch controls: a thumb-stick, tap-to-aim casting and big, easy buttons. Add it to your Home Screen to play full screen.", "#/play"],
@@ -80,7 +85,7 @@ window.SITE = {
 	// Each section: id, title, html. Tables of game data are added by app.js.
 	guide: [
 		{ id: "start", title: "Getting started", html: `
-			<p>You arrive at Thistlewick Cottage with a letter, a ruin and a scar that glows. Your first days:</p>
+			<p>You are <b>Alder Fairweather</b>, and you arrive at Thistlewick Cottage with a letter, a ruin and a scar that glows. Your first days:</p>
 			<ol class="steps">
 				<li>Press <span class="kbd">E</span> at the hearth to wake <b>Pip</b>, your hearth sprite. He'll guide you.<em>Pip's tips pop up the first time anything new matters.</em></li>
 				<li>Plant and water the Glowcap seeds in the garden. Water every day; they ripen in a few days.</li>
@@ -108,7 +113,9 @@ window.SITE = {
 				<tr><td>Skills / Spellbook</td><td><span class="kbd">K</span> / <span class="kbd">B</span></td><td>Menu → Skills / Spellbook</td></tr>
 				<tr><td>World map</td><td><span class="kbd">M</span></td><td><span class="pad">L3</span></td></tr>
 				<tr><td>Pause</td><td><span class="kbd">Esc</span></td><td><span class="pad">Menu</span></td></tr>
-			</table></div>` },
+			</table></div>
+			<h3>Phones and tablets</h3>
+			<p>Turn it sideways. Your left thumb walks with the stick in the bottom-left corner. <b>Tap anywhere on the open screen to cast at that spot</b>, and hold to keep casting while the aim follows your finger. Ward, dodge, your spell keys, potions and the broom each have a button, and you tap to read on.</p>` },
 		{ id: "combat", title: "Combat", html: `
 			<h3>The spell triangle</h3>
 			<p><b>Attack</b> beats <b>Control</b> (a hit interrupts a winding spell). <b>Control</b> beats <b>Ward</b> (Gust smashes shields). <b>Ward</b> beats <b>Attack</b>. Every spell has a readable wind-up: watch for it.</p>
@@ -159,6 +166,7 @@ window.SITE = {
 		{ id: "romance", title: "Friends & romance", html: `
 			<p>Talk to someone once a day and give one gift a day (they each love, like and dislike different things). Hearts come faster if your path matches theirs. Heart scenes play at 2, 4 and 6 hearts, and a confession at 8 for <b>Kestrel</b> (Radiant), <b>Thorne</b> (Twilight) and <b>Grisela</b> (Hollow).</p>
 			<p>At 10 hearts, offer a <b>Twin Lantern</b> (500 Gleam from the pedlar or the Lanternfall stall). You'll wed under the arch at the next Lanternfall, from 18:00. Your partner moves into the cottage and halves the goblin raid chance; Grisela leaves you a Midnight Tonic every Restday.</p>
+			<p><b>Linnet Evermoor</b>, on the village well, is a friend and not a romance: she loves honey buns and spiced cider, her heart scenes run to 8 hearts, and she has something to say about each big turn of the story.</p>
 			<h3>Fighting together</h3>
 			<p>With a sweetheart or spouse, ask <b>Magister Corvin</b> for a <b>two-on-two</b> once a day. At 4 hearts with Kestrel (and with a broom of your own) she'll challenge you to a <b>sky duel</b> on brooms.</p>` },
 		{ id: "achievements", title: "Achievements", html: `<div id="guide-ach"></div>` },
@@ -194,6 +202,9 @@ window.SITE = {
 		["The mines are too dark!", "Drink a Night-Sight Tonic before going in, and bring a wand. Glimmerdeep Mines need both."],
 		["How do I get into the Ember Ring?", "Reach Apprentice rank in any guild and carry a wand; the road east of the village opens to Cinderhold."],
 		["Where do I get a broom?", "Kestrel lends you her practice broom for the Galecrest Skyrace. Faster brooms are hidden around the valley (see Brooms & wands)."],
+		["Can I name my hero?", "Your hero is always Alder Fairweather. You still choose how they look."],
+		["How do I cast on a phone?", "Tap anywhere on the open screen to cast at that spot, and hold to keep casting. The stick in the bottom-left corner walks."],
+		["Who are the strangers I keep meeting?", "Five travellers from peoples beyond the valley: Sefa Lintel by the village well, Bracken Oathroot at Bloomwake, Caldus Farreckon below the Lantern Spire, Ansel Marl in the Mirrorwood and a courier at the Silkmere dye-sheds. See Peoples in the Compendium."],
 		["How do I fish?", "Buy a rod from Juniper, find white rings on the water, press E, wait for the bite, strike, then hold E to keep the net on the fish."],
 		["Nothing is biting in the mine pools.", "Cave fish need Fishing level 14 or more. Level up on ponds first."],
 		["Where's the Mirrorwood?", "North of the Fernhallow Wilds. It opens once you hold five Seals."],
@@ -214,15 +225,18 @@ window.SITE = {
 		["The Past · 25 years ago", "The Sundering", "On one terrible night the Weave shattered. Its pieces became six Seals, one kept by each guild. A tower of black glass burned. Seven children were born that night. Six died.", false],
 		["The Past · 25 years ago", "The seventh child", "The seventh held the Weave's heart, and still does. Vesper Nightlock timed that birth on purpose. The child was hers. Her first attempt, a boy called Fennick, had failed and been left half-hollow.", true],
 		["The Past · 25 years ago", "Maren's penance", "Maren carried the baby out of the burning tower, sealed away their memories (and a sliver of their soul) inside a violet stone, and sent them far away to grow up in a grey harbour town where magic doesn't work.", true],
-		["The Past · your childhood", "Port Saltmere", "You grew up there with no memories before age seven, a silver scar on your left palm, and a recurring dream of a burning tower. Your foster parents were kind, and careful.", false],
+		["The Past · your childhood", "Port Saltmere", "You grew up there as Alder Fairweather, with no memories before age seven, a silver scar on your left palm, and a recurring dream of a burning tower. Your foster parents were kind, and careful.", false],
 		["The Past · your childhood", "The watchers", "They were paid to watch you.", true],
 		["Act 1 · Spring, Year 1", "Arrival", "A letter sealed in violet wax and signed 'M.' brings you to WyrdHollow. Maren is gone and her cottage is a ruin. You wake Pip in the hearth, plant your first garden, join a guild, and find Maren's journal pages: the scar is a Weave-mark, there are six Seals, and you should look in the mirrors.", false],
 		["Act 2 · Summer, Year 1 → Winter, Year 2", "The Six Seals", "A letter from your foster parents asks one question too many: has your scar begun to glow? A stranger with a grey ring asks about you at the market. Pip has a plan: earn all six Seals before the grey rings do. Each Seal cracks the violet stone you wear, and a memory comes back.", false],
-		["Act 2 · the Heartstone", "Six memories", "A couple counting coins while a child watches. Maren teaching a dark-haired woman a spiral of light. A boy behind glass. The tower on fire and a voice calling your real name. Maren pressing the stone into your hand: 'Hold it. Forget. Live.' And your palm on a heart of light as the tower breaks.", true],
+		["Act 2 · on the road", "Strangers", "Travellers from beyond the valley cross your path: a woman with silver seams who asks whether the stone under the well has begun to sing, a seed-keeper with bark for skin, a scholar with stars on his arms, a man who forgets you a minute after you help him. None of them explains.", false],
+		["Act 2 · the village well", "Linnet Evermoor", "Your best friend sits on the well with a brass hairpin and an answer for everything. She casts gold and violet in the same breath and won't say how. When the Hush look at her hands, they call her 'my lady' and step round her.", false],
+		["Act 2 · the Heartstone", "Six memories", "A couple counting coins while a child watches. Maren teaching a dark-haired woman a spiral of light. A boy behind glass. The tower on fire and a voice calling your real name: 'Aster!' Maren pressing the stone into your hand: 'Hold it. Forget. Live.' And your palm on a heart of light as the tower breaks.", true],
 		["Act 2 · the Mirrorwood", "Maren", "At five Seals the Mirrorwood opens. At its heart, in a great mirror, Maren: alive, trapped, unable to step out. 'I never wrote you a letter.' The letter was a lure.", true],
 		["Act 2 · Frostglow", "The voice from the tower", "At the winter championship, with the whole valley watching, the lanterns go out. Violet smoke. Vesper Nightlock steps out of it with the Hush behind her, and says your real name.", true],
 		["Act 3 · Year 3", "The Hollow Court", "Vesper tells you plainly: she is your mother, and she wants you back. That night the Hush take the person you love most. Fennick, wounded, tells you he is your half-brother. The Gloam turns out to be Vesper's own magic, rotting: she is dying, and the crown is her cure. You rally the guilds, break the Hush's three strongholds, and Quillon finds the last record: you are the seventh Seal.", true],
-		["Act 4 · Lanternfall, Year 3", "The Hollow Crown", "At Hollow Keep you climb six floors of memory, free the one they took, and face Vesper: a formal duel, the Gloam pouring out of her, and the crown forged from the six Seals as she reaches for the Weave inside you. The crown is in your hands.", true],
+		["Act 3 · the alder by the pond", "Two names", "Vesper named you Aster Nightlock. Maren named you Alder, for the great alder at Thistlewick that stood between you and the fire the night she carried you out. One whole side of it is still charred black, and it still puts out leaves. You stay Alder.", true],
+		["Act 4 · Lanternfall, Year 3", "The Hollow Crown", "Linnet meets you at the black glass gate and holds the stair behind you, so that nobody follows. At Hollow Keep you climb six floors of memory, free the one they took, and face Vesper: a formal duel, the Gloam pouring out of her, and the crown forged from the six Seals as she reaches for the Weave inside you. The crown is in your hands.", true],
 		["The Endings", "Your choice", "Break the crown and give the Weave back to the valley (the Rekindling), or wear it yourself (the Hollow Crown). With your path so far, that makes four endings: the Hero, the Fall, the Heir and the Redemption. Either way the valley carries on, and so do you.", false],
 	],
 };

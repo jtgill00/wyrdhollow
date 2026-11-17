@@ -1,6 +1,6 @@
 # WyrdHollow: Part 1 — website
 
-The official site: a single page with four views (Home, Guide, Story, Play), no
+The official site: a single page with six views (Home, Map, Compendium, Guide, Story, Play), no
 build step and no libraries. It works straight from GitHub Pages.
 
 ## Put it online with GitHub Pages
@@ -85,6 +85,12 @@ The Start press is sent as `play_started` (Google) and `PlayStarted` (Meta).
 
 - **Words** (features, guide pages, FAQ, story, walkthrough hints):
   `js/content.js`.
+- **The Map and the Compendium** (every place on the painted map, the
+  creatures, peoples, schools, brooms, wands and Seals): `js/world.js`.
+  Each place has `x` and `y`: where its light sits on the map, in percent
+  from the left and from the top. The pictures come from JT's painted plates
+  in `book/art/appendix/`; `tools/build_website.py` turns the map upright and
+  cuts each creature out of its plate.
 - **Game data** (fish, meals, creatures, brooms, cores, spells, achievements,
   quests, screenshots, sprites) is built from the game's own files. After the
   game changes, run this from the game's project folder:
@@ -105,6 +111,12 @@ The Start press is sent as `play_started` (Google) and `PlayStarted` (Meta).
 - **Home:** hero, features, Light & Shadow, a pinned sideways gallery, an
   interactive world map, the cast (real animated sprites), the six guilds,
   familiars and all 33 achievements.
+- **Map** (`#/map`): JT's painted map with a light on every place, land and
+  road. Tap one for what it is, how to get there, who and what you'll meet.
+  `#/map/ironroot` opens straight on a place.
+- **Compendium** (`#/compendium`): painted plates of the creatures, brooms,
+  wands, Seals and Hollow Keep (each opens full size, with its pencil
+  sketch), plus the peoples and schools beyond the valley.
 - **Guide:** searchable; controls, combat, a full walkthrough with hints,
   an "I'm stuck!" FAQ, and tables of every fish, meal, brew, spell,
   familiar, broom and wand core.

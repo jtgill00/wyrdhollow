@@ -1381,6 +1381,20 @@ window.WH = {
    }
   },
   {
+   "name": "Linnet Evermoor",
+   "role": "Your best friend",
+   "blurb": "She sits on the village well with a brass hairpin and an answer for everything. Gold and violet magic in the same breath, and she won't say how.",
+   "sprite": {
+    "src": "assets/sprites/linnet.png",
+    "fw": 32,
+    "fh": 48,
+    "start": 4,
+    "count": 4,
+    "fps": 7,
+    "row": 0
+   }
+  },
+  {
    "name": "Juniper Bell",
    "role": "The village baker",
    "blurb": "Warm, chatty and kind. She'll give you honey buns, buy your fish and sell you a rod.",
@@ -1577,6 +1591,68 @@ window.WH = {
    }
   }
  ],
+ "strangers": {
+  "veilborn": {
+   "name": "Sefa Lintel",
+   "sprite": {
+    "src": "assets/sprites/veilborn_traveller.png",
+    "fw": 32,
+    "fh": 48,
+    "start": 4,
+    "count": 4,
+    "fps": 7,
+    "row": 0
+   }
+  },
+  "thornkin": {
+   "name": "Bracken Oathroot",
+   "sprite": {
+    "src": "assets/sprites/thornkin_seedkeeper.png",
+    "fw": 32,
+    "fh": 48,
+    "start": 4,
+    "count": 4,
+    "fps": 7,
+    "row": 0
+   }
+  },
+  "astralyn": {
+   "name": "Caldus Farreckon",
+   "sprite": {
+    "src": "assets/sprites/astralyn_scholar.png",
+    "fw": 32,
+    "fh": 48,
+    "start": 4,
+    "count": 4,
+    "fps": 7,
+    "row": 0
+   }
+  },
+  "hollowed": {
+   "name": "Ansel Marl",
+   "sprite": {
+    "src": "assets/sprites/hollowed_traveller.png",
+    "fw": 32,
+    "fh": 48,
+    "start": 4,
+    "count": 4,
+    "fps": 7,
+    "row": 0
+   }
+  },
+  "shadowborn": {
+   "name": "Ravel Underlamp",
+   "sprite": {
+    "src": "assets/sprites/shadowborn_courier.png",
+    "fw": 32,
+    "fh": 48,
+    "start": 4,
+    "count": 4,
+    "fps": 7,
+    "row": 0
+   }
+  }
+ },
  "guilds": [
   {
    "name": "Cauldron Circle",

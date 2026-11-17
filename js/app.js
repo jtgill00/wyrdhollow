@@ -177,9 +177,25 @@
 	const sizeGallery = () => { $("#gallery").style.height = innerWidth > 760 ? `${100 + WH.screenshots.length * 70}vh` : ""; };
 	sizeGallery(); addEventListener("resize", sizeGallery);
 	$("#swipe-hint").textContent = `Swipe to see all ${WH.screenshots.length} screenshots →`;
-	const lb = $("#lightbox");
-	$$(".shot").forEach((s) => s.addEventListener("click", () => { const d = WH.screenshots[s.dataset.i]; $("img", lb).src = d.src; $("p", lb).textContent = d.caption; lb.classList.add("open"); }));
+	const lb = $("#lightbox"), lbAlt = $("#lb-alt");
+	let lbPair = null, lbOther = false;
+	// showBox(picture, caption, [the same page as a pencil sketch])
+	function showBox(src, caption, alt) {
+		$("img", lb).src = src; $("p", lb).textContent = caption;
+		lbPair = alt ? [src, alt] : null; lbOther = false;
+		lbAlt.hidden = !alt; lbAlt.textContent = "See the pencil sketch";
+		lb.classList.add("open");
+	}
+	lbAlt.addEventListener("click", (e) => {
+		e.stopPropagation();
+		if (!lbPair) return;
+		lbOther = !lbOther;
+		$("img", lb).src = lbPair[lbOther ? 1 : 0];
+		lbAlt.textContent = lbOther ? "See the painting" : "See the pencil sketch";
+	});
+	$$(".shot").forEach((s) => s.addEventListener("click", () => { const d = WH.screenshots[s.dataset.i]; showBox(d.src, d.caption); }));
 	lb.addEventListener("click", () => lb.classList.remove("open"));
+	addEventListener("keydown", (e) => { if (e.key === "Escape") lb.classList.remove("open"); });
 
 	function railScroll() {
 		const sec = $("#gallery"), rail = $("#rail");
@@ -193,21 +209,223 @@
 		$("#rail-bar").style.width = k * 100 + "%";
 	}
 
-	// ---------- World map --------------------------------------------------------------------
-	const map = $("#map");
-	const lines = [[0, 1], [1, 2], [0, 3], [3, 4], [1, 5], [2, 6], [1, 7], [7, 8], [2, 9], [8, 10], [6, 11], [3, 12], [11, 13], [1, 14]];
-	$("#map-lines").innerHTML = lines.map(([a, b]) => { const A = WH.places[a], B = WH.places[b]; const mx = (A[3] + B[3]) / 2, my = (A[4] + B[4]) / 2 - 6; return `<path d="M${A[3]} ${A[4]} Q${mx} ${my} ${B[3]} ${B[4]}"/>`; }).join("");
-	WH.places.forEach((p, i) => {
-		const pin = el("button", "pin"); pin.style.left = p[3] + "%"; pin.style.top = p[4] + "%"; pin.dataset.name = p[0]; pin.setAttribute("aria-label", p[0]);
-		pin.addEventListener("click", () => showPlace(i)); map.appendChild(pin);
-	});
-	function showPlace(i) {
-		const p = WH.places[i], panel = $("#place");
-		$$(".pin", map).forEach((x, j) => x.classList.toggle("on", j === i));
-		panel.classList.remove("swap"); void panel.offsetWidth; panel.classList.add("swap");
-		panel.innerHTML = `<span class="kicker">${String(i + 1).padStart(2, "0")} · Region</span><h3 class="grad-text">${esc(p[0])}</h3><p>${esc(p[1])}</p><div class="need">↳ HOW TO GET THERE: ${esc(p[2]).toUpperCase()}</div>`;
-	}
-	showPlace(0);
+	// ---------- The Map: JT's painted map with a light on every place ---------------------------
+	const WORLD = window.WORLD;
+	const plateSrc = (plate, sketch) => `assets/plates/${sketch ? "sketch" : "final"}-${plate}.jpg`;
+	const openPlate = (plate, caption) => showBox(plateSrc(plate), caption, plateSrc(plate, true));
+	const creatureAt = (name) => WORLD.creatures.find((c) => c.name === name);
+	let openAtlas = () => {}, openCompendium = () => {};
+	(() => {
+		const frame = $("#atlas-frame"), mapEl = $("#atlas-map"), card = $("#atlas-card");
+		if (!frame) return;
+		const A = WORLD.atlas;
+		const KIND = { place: "Place", land: "Land or water", road: "Road" };
+		const LEAN = { light: "Leans to the light", shadow: "Leans to the shadow", neither: "Neither light nor shadow" };
+		const FILTERS = [["all", "Everything"], ["place", "Places"], ["land", "Lands & waters"], ["road", "Roads"]];
+		let filter = "all", zoom = 1, current = "";
+
+		$("#atlas-filter").innerHTML = FILTERS.map((f) => `<button type="button" data-f="${f[0]}">${esc(f[1]).toUpperCase()}</button>`).join("");
+		A.forEach((p) => {
+			const pin = el("button", "apin"); pin.type = "button";
+			pin.style.left = p.x + "%"; pin.style.top = p.y + "%";
+			pin.dataset.id = p.id; pin.dataset.kind = p.kind; pin.dataset.lean = p.lean; pin.dataset.name = p.name;
+			pin.setAttribute("aria-label", p.name);
+			pin.addEventListener("click", () => { if (!dragged) select(p.id, false, true); });
+			mapEl.appendChild(pin);
+		});
+		$("#atlas-index").innerHTML = [["place", "Places"], ["land", "Lands & waters"], ["road", "Roads"]].map(([k, title]) =>
+			`<div class="atlas-group" data-kind="${k}"><h3>${title}</h3><div>${A.filter((p) => p.kind === k).map((p) => `<button type="button" class="atlas-name" data-id="${p.id}" data-lean="${p.lean}"><i></i>${esc(p.name)}</button>`).join("")}</div></div>`).join("");
+		$$(".atlas-name").forEach((b) => b.addEventListener("click", () => select(b.dataset.id, true, true)));
+
+		const chips = (title, list, fn) => list && list.length ? `<h4>${title}</h4><div class="atlas-chips">${list.map(fn).join("")}</div>` : "";
+		function select(id, centre, tell) {
+			const p = A.find((x) => x.id === id) || A[0];
+			current = p.id;
+			$$(".apin", mapEl).forEach((x) => x.classList.toggle("on", x.dataset.id === p.id));
+			$$(".atlas-name").forEach((x) => x.classList.toggle("on", x.dataset.id === p.id));
+			card.classList.remove("swap"); void card.offsetWidth; card.classList.add("swap");
+			card.dataset.lean = p.lean;
+			card.innerHTML = `<span class="kicker">${KIND[p.kind]}</span>
+				<h3 class="grad-text">${esc(p.name)}</h3>
+				<span class="atlas-lean" data-lean="${p.lean}"><i></i>${LEAN[p.lean]}</span>
+				${p.img ? `<img class="atlas-shot" src="assets/atlas/places/${p.img}.jpg" alt="${esc(p.name)} in the game" loading="lazy" width="960" height="540">` : ""}
+				<p>${esc(p.about)}</p>
+				${p.reach ? `<div class="need">↳ HOW TO GET THERE</div><p class="atlas-reach">${esc(p.reach)}</p>` : ""}
+				${chips("Who you may meet", p.people, (n) => `<span class="chip">${esc(n)}</span>`)}
+				${chips("Creatures", p.creatures, (n) => { const c = creatureAt(n); return c ? `<a class="chip link" href="#/compendium/creatures/${c.id}">${esc(n)} →</a>` : `<span class="chip">${esc(n)}</span>`; })}
+				${p.finds && p.finds.length ? `<h4>Worth knowing</h4><ul class="atlas-finds">${p.finds.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>` : ""}
+				${p.plate ? `<button type="button" class="btn ghost" data-plate="${p.plate}">See the painted plate</button>` : ""}`;
+			const shot = $(".atlas-shot", card);
+			if (shot) shot.addEventListener("click", () => showBox(shot.src, p.name + ", as it looks in the game"));
+			const pb = $("[data-plate]", card);
+			if (pb) pb.addEventListener("click", () => openPlate(p.plate, p.name));
+			if (filter !== "all" && filter !== p.kind) setFilter("all");
+			if (centre) {
+				const pin = $(`.apin[data-id="${p.id}"]`, mapEl);
+				frame.scrollTo({ left: pin.offsetLeft - frame.clientWidth / 2, top: pin.offsetTop - frame.clientHeight / 2, behavior: reduced ? "auto" : "smooth" });
+			}
+			if (tell) {
+				try { history.replaceState(null, "", "#/map/" + p.id); } catch (e) {}
+				// On a phone the card sits under the map: bring it into view.
+				if (innerWidth <= 980) card.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: centre ? "center" : "nearest" });
+			}
+		}
+		function setFilter(f) {
+			filter = f;
+			$$("#atlas-filter button").forEach((b) => b.classList.toggle("on", b.dataset.f === f));
+			$$(".apin", mapEl).forEach((x) => x.classList.toggle("off", f !== "all" && x.dataset.kind !== f));
+			$$(".atlas-group").forEach((g) => g.hidden = f !== "all" && g.dataset.kind !== f);
+		}
+		$$("#atlas-filter button").forEach((b) => b.addEventListener("click", () => setFilter(b.dataset.f)));
+
+		// Zoom: the map grows inside its frame and you drag or scroll it about.
+		function setZoom(z) {
+			const cx = (frame.scrollLeft + frame.clientWidth / 2) / mapEl.offsetWidth, cy = (frame.scrollTop + frame.clientHeight / 2) / mapEl.offsetHeight;
+			zoom = Math.min(3, Math.max(1, z));
+			mapEl.style.width = zoom * 100 + "%";
+			frame.classList.toggle("zoomed", zoom > 1);
+			frame.scrollLeft = cx * mapEl.offsetWidth - frame.clientWidth / 2; frame.scrollTop = cy * mapEl.offsetHeight - frame.clientHeight / 2;
+			$("#atlas-out").disabled = zoom <= 1; $("#atlas-in").disabled = zoom >= 3;
+		}
+		$("#atlas-in").addEventListener("click", () => setZoom(zoom + 0.5));
+		$("#atlas-out").addEventListener("click", () => setZoom(zoom - 0.5));
+		$("#atlas-full").addEventListener("click", () => showBox("assets/atlas/map.jpg", "The Valley of WyrdHollow", "assets/atlas/map_sketch.jpg"));
+		let drag = null, dragged = false;
+		frame.addEventListener("pointerdown", (e) => { if (e.pointerType === "mouse") { drag = { x: e.clientX, y: e.clientY, l: frame.scrollLeft, t: frame.scrollTop }; dragged = false; } });
+		addEventListener("pointermove", (e) => {
+			if (!drag) return;
+			const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+			if (Math.abs(dx) + Math.abs(dy) > 5) { dragged = true; frame.classList.add("dragging"); }
+			frame.scrollLeft = drag.l - dx; frame.scrollTop = drag.t - dy;
+		});
+		addEventListener("pointerup", () => { drag = null; frame.classList.remove("dragging"); setTimeout(() => { dragged = false; }, 0); });
+
+		setFilter("all"); setZoom(1); select("village", false, false);
+		openAtlas = (id, fresh) => {
+			if (id && A.some((p) => p.id === id)) { if (id !== current || fresh) select(id, true, false); }
+			else if (fresh) setTimeout(() => { const pin = $(`.apin[data-id="${current}"]`, mapEl); frame.scrollLeft = pin.offsetLeft - frame.clientWidth / 2; }, 60);
+		};
+	})();
+
+	// ---------- The Compendium: creatures, peoples, schools, brooms, wands, Seals ---------------
+	(() => {
+		const body = $("#comp-body"), tabsEl = $("#comp-tabs");
+		if (!body) return;
+		const TABS = [["creatures", "Creatures"], ["peoples", "Peoples"], ["schools", "Schools"], ["brooms", "Brooms"], ["wands", "Wands & cores"], ["seals", "Seals & things carried"], ["keep", "Hollow Keep"]];
+		const tbl = (heads, rows) => `<div class="table-wrap"><table><tr>${heads.map((h) => `<th>${h}</th>`).join("")}</tr>${rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</table></div>`;
+		const plateFig = (plate, name) => `<figure class="comp-plate" data-plate="${plate}" data-name="${esc(name)}"><img src="${plateSrc(plate)}" alt="${esc(name)}: a painted plate" loading="lazy" width="1500" height="1940"><figcaption>Tap to see it full size, and the pencil sketch</figcaption></figure>`;
+		const seenAt = (name) => WORLD.atlas.filter((p) => (p.creatures || []).includes(name));
+		const panels = {};
+
+		// Creatures
+		panels.creatures = `<p class="comp-intro">Ten of the valley's creatures can be calmed with patience or bound with Hollow magic, and will keep house and fight beside you. Others are best met with a ward up.</p><div class="comp-grid">${WORLD.creatures.map((c) => {
+			const g = WH.creatures.find((x) => x.name === c.name) || {};
+			const where = seenAt(c.name);
+			return `<article class="comp-card" id="c-${c.id}" data-kind="${c.kind}">
+				${c.plate ? `<img class="comp-pic" src="assets/plates/creature_${c.id}.jpg" alt="${esc(c.name)}, painted" loading="lazy" data-plate="${c.plate}" data-name="${esc(c.name)}">` : `<div class="comp-pic none"></div>`}
+				<div class="comp-text">
+					<div class="comp-head"><span class="comp-sprite" data-sprite="${c.id}"></span><div><span class="comp-kind">${esc(c.kind)}</span><h3>${esc(c.name)}</h3><small>${esc(c.where)}</small></div></div>
+					<p>${esc(c.text || g.desc || "")}</p>
+					${g.perk ? `<p class="comp-fact"><b>As your familiar:</b> ${esc(g.perk)}</p><p class="comp-fact"><b>To calm it:</b> kneel and keep still for about ${g.calm} seconds.</p>` : ""}
+					${where.length ? `<div class="atlas-chips">${where.map((p) => `<a class="chip link" href="#/map/${p.id}">${esc(p.name)} →</a>`).join("")}</div>` : ""}
+				</div></article>`;
+		}).join("")}</div>`;
+
+		// Peoples
+		panels.peoples = `<p class="comp-intro">The six guilds are trades inside the valley. Beyond the map live older peoples with older magic. None of them is good or wicked by birth. Five of them cross your path in Part One; nobody explains them yet.</p><div class="comp-grid two">${WORLD.peoples.map((p) => `<article class="comp-card people" id="p-${p.id}">
+				<div class="comp-text">
+					<div class="comp-head"><span class="comp-sprite" data-stranger="${p.id}"></span><div><span class="comp-kind">${esc(p.school)}</span><h3>${esc(p.name)}</h3><small>${esc(p.title)}</small></div></div>
+					<p>${esc(p.look)}</p>
+					<p class="comp-fact"><b>Their gift:</b> ${esc(p.gift)}</p>
+					<p class="comp-fact"><b>What it costs:</b> ${esc(p.cost)}</p>
+					<p class="comp-fact met"><b>In Part One:</b> ${esc(p.met)}</p>
+				</div></article>`).join("")}</div>
+			<h3 class="comp-sub">Ten peoples further off</h3>
+			<p class="comp-intro">Each keeps a school of its own. In Part One they are only rumours: a wind-chime, a warm feather, a lens that won't go dark.</p>
+			<div class="comp-grid three">${WORLD.outer.map((o) => `<article class="comp-card mini"><div class="comp-text"><span class="comp-kind">${esc(o[2])}</span><h3>${esc(o[0])}</h3><p>${esc(o[3])}</p><a class="chip link" href="#/compendium/schools">${esc(o[1])} →</a></div></article>`).join("")}</div>`;
+
+		// Schools
+		const F = WORLD.firstweave;
+		panels.schools = `<p class="comp-intro">A guild is a trade. A school is the formal study of an older magic. A people is a people. The three overlap, and none of them decides who you are: a Sylph may study anywhere, and a human may earn a place at the Cinder Crucible.</p>
+			<article class="comp-card wide"><div class="comp-text">
+				<span class="comp-kind">${esc(F.also)}</span><h3>${esc(F.name)}</h3>
+				<p class="comp-motto">“${esc(F.motto)}”</p>
+				<p>${esc(F.text)}</p>
+				<p class="comp-fact"><b>Its badge:</b> ${esc(F.badge)}</p>
+				<p class="comp-fact"><b>Head of school:</b> ${esc(F.head)}</p>
+				<p class="comp-fact"><b>On the grounds:</b> ${F.halls.map(esc).join(" · ")}</p>
+				<div class="atlas-chips">${F.studies.map((s) => `<span class="chip">${esc(s[0])} <small>${esc(s[1])}</small></span>`).join("")}</div>
+			</div></article>
+			<h3 class="comp-sub">The ten outer schools</h3>
+			${tbl(["School", "People", "What it teaches", "Where", "Its old discipline", "Magic has a price"], WORLD.outer.map((o) => [`<b>${esc(o[1])}</b>`, esc(o[0]), esc(o[2]), esc(o[4]), esc(o[5]), esc(o[6])]))}
+			<h3 class="comp-sub">Not schools at all</h3>
+			<div class="comp-grid two">
+				<article class="comp-card mini"><div class="comp-text"><span class="comp-kind">Shadowborn</span><h3>The Duskwatch Refuge</h3><p>A hidden sanctuary, not an academy. The Hollow Court wants its people because they can find a thing that has been cut loose.</p></div></article>
+				<article class="comp-card mini"><div class="comp-text"><span class="comp-kind">Liches</span><h3>The Quiet Reliquary</h3><p>A hidden order and its archive. It knows a great deal, and it always wants paying.</p></div></article>
+			</div>`;
+
+		// Brooms
+		panels.brooms = `<div class="comp-split">${plateFig("08-brooms", "Brooms")}<div>
+				<p class="comp-intro">Brooms are made and raced by the Skyward Rookery on Galecrest Cliffs. You ride with <span class="kbd">V</span>, and always on the fastest broom you own.</p>
+				<ol class="comp-list">${WORLD.brooms.map((b) => `<li><b>${esc(b[0])}</b>${esc(b[1])}</li>`).join("")}</ol>
+			</div></div>
+			<h3 class="comp-sub">Brooms you can ride</h3>
+			${tbl(["Broom", "Speed", "Where to find it"], WH.brooms.map((b) => [`<span class="dot" style="background:${b.bristles}"></span><b>${esc(b.name)}</b><br><small style="color:var(--muted)">${esc(b.desc)}</small>`, b.speed + "× walking", esc(b.where)]))}
+			<p class="comp-intro">Rallying the Rookery late in the story tunes your broom, and a Stormcrow familiar adds another 10%.</p>`;
+
+		// Wands
+		panels.wands = `<div class="comp-split">${plateFig("09-wands", "Wands, grain and core")}<div>
+				<p class="comp-intro">A wand is a hand made longer; measure the hand first. Birch for beginners. A Heartwood wand is cut from the oldest root in Ironroot Hollow and wakes only for the hand it was made for.</p>
+				<h4>The grain follows the heart</h4>
+				<ul class="comp-list">${WORLD.grains.map((g) => `<li><b>${esc(g[0])}</b>${esc(g[1])}</li>`).join("")}</ul>
+				<h4>The core follows what you were born to</h4>
+				<ul class="comp-list">${WORLD.bornTo.map((g) => `<li><b>${esc(g[0])}</b>${esc(g[1])}</li>`).join("")}</ul>
+			</div></div>
+			<h3 class="comp-sub">Wand cores</h3>
+			<p class="comp-intro">Bring a core to Bartram Knotwood and he'll fit it, one at a time. A better core makes your attack spells hit harder.</p>
+			${tbl(["Core", "Spells hit harder", "How to get it"], WH.cores.map((c) => [`<b>${esc(c.name)}</b>`, "+" + c.bonus + "%", esc(c.where)]))}`;
+
+		// Seals and things carried
+		panels.seals = `<div class="comp-split">${plateFig("10-seals", "The six Seals, and things carried")}<div>
+				<p class="comp-intro">What is left of the Weave, one piece kept by each guild. Each is no bigger than a Bloomwake daisy, and ragged at the edges, as if torn.</p>
+				<ol class="comp-list">${WORLD.seals.map((s) => { const g = WH.guilds.find((x) => x.name === s[0]) || {}; return `<li><b>${esc(s[0])}</b>${esc(s[1])}. ${esc(s[2])}${g.trial ? `<small>Seal Trial: ${esc(g.trial)}</small>` : ""}</li>`; }).join("")}</ol>
+				<h4>Things carried</h4>
+				<ul class="comp-list">${WORLD.carried.map((c) => `<li><b>${esc(c[0])}</b>${esc(c[1])}</li>`).join("")}</ul>
+			</div></div>`;
+
+		// Hollow Keep
+		panels.keep = `<div class="comp-split">${plateFig("02-hollow-keep", "Hollow Keep")}<div>
+				<p class="comp-intro">The black glass tower beyond the Weeping Veil. Each floor holds one memory. The gate opens only at Lanternfall.</p>
+				<ol class="comp-list tower" reversed>${[...WORLD.keep].reverse().map((f) => `<li><b>${esc(f)}</b></li>`).join("")}</ol>
+				<p class="comp-intro">Beside it stands a dead alder. If you fall on the way up you're hauled back to your feet: there is no game over.</p>
+				<a class="btn ghost" href="#/map/hollow_keep">Find it on the map</a>
+			</div></div>`;
+
+		tabsEl.innerHTML = TABS.map((t) => `<button type="button" data-t="${t[0]}">${esc(t[1]).toUpperCase()}</button>`).join("");
+		body.innerHTML = TABS.map((t) => `<div class="comp-panel" id="comp-${t[0]}" hidden>${panels[t[0]]}</div>`).join("");
+		$$("[data-sprite]", body).forEach((n) => {
+			const id = n.dataset.sprite, c = WORLD.creatures.find((x) => x.id === id);
+			const g = WH.creatures.find((x) => x.name === c.name);
+			const s = g ? g.sprite : id === "goblins" ? WH.goblin : id === "hearth_sprite" ? WH.pip : null;
+			if (s) sprite(n, s, 2); else n.remove();
+		});
+		$$("[data-stranger]", body).forEach((n) => { const s = (WH.strangers || {})[n.dataset.stranger]; if (s) sprite(n, s.sprite, 2); else n.remove(); });
+		$$("[data-plate]", body).forEach((n) => n.addEventListener("click", () => openPlate(n.dataset.plate, n.dataset.name)));
+		$$("button", tabsEl).forEach((b) => b.addEventListener("click", () => go("#/compendium/" + b.dataset.t)));
+
+		openCompendium = (tab, id) => {
+			if (!TABS.some((t) => t[0] === tab)) tab = "creatures";
+			$$("button", tabsEl).forEach((b) => b.classList.toggle("on", b.dataset.t === tab));
+			$$(".comp-panel", body).forEach((p) => p.hidden = p.id !== "comp-" + tab);
+			const target = id && ($("#c-" + id) || $("#p-" + id));
+			// A new tab starts at its top, not wherever the last one was scrolled to.
+			if (!target && body.getBoundingClientRect().top < 0) scrollTo(0, body.getBoundingClientRect().top + scrollY - 150);
+			if (target) setTimeout(() => {
+				target.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+				target.classList.remove("flash"); void target.offsetWidth; target.classList.add("flash");
+			}, 80);
+		};
+	})();
 
 	// ---------- Characters ---------------------------------------------------------------------
 	const cast = $("#cast"), modal = $("#person-modal");
@@ -282,7 +500,10 @@
 	$$(".gsec").forEach((s) => {
 		$$("p, li, tr, details", s).forEach((n) => index.push({ where: s.dataset.title, text: n.textContent.replace(/\s+/g, " ").trim(), node: n }));
 	});
-	WH.places.forEach((p) => index.push({ where: "World", text: `${p[0]}: ${p[1]} How to get there: ${p[2]}.`, home: "#world" }));
+	WORLD.atlas.forEach((p) => index.push({ where: "The Map", text: `${p.name}: ${p.about}${p.reach ? " How to get there: " + p.reach : ""}`, go: "#/map/" + p.id }));
+	WORLD.creatures.forEach((c) => index.push({ where: "Compendium · Creatures", text: `${c.name} (${c.where}): ${c.text || ""}`, go: "#/compendium/creatures/" + c.id }));
+	WORLD.peoples.forEach((p) => index.push({ where: "Compendium · Peoples", text: `${p.name}, ${p.title}: ${p.look} ${p.gift}`, go: "#/compendium/peoples/" + p.id }));
+	WORLD.outer.forEach((o) => index.push({ where: "Compendium · Schools", text: `${o[0]} · ${o[1]} (${o[2]}): ${o[3]}`, go: "#/compendium/schools" }));
 	WH.characters.forEach((c) => index.push({ where: "Characters", text: `${c.name} (${c.role}): ${c.blurb}`, home: "#characters" }));
 	const results = $("#results");
 	$("#q").addEventListener("input", (e) => {
@@ -297,6 +518,7 @@
 			const r = el("div", "result", `<small>${esc(h.where).toUpperCase()}</small><div>${t}</div>`);
 			r.style.cursor = "pointer";
 			r.addEventListener("click", () => {
+				if (h.go) { go(h.go); return; }
 				if (h.home) { go("#/" + h.home); return; }
 				const n = h.node.closest("details") || h.node; if (n.tagName === "DETAILS") n.open = true;
 				n.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -323,14 +545,18 @@
 	let view = "";
 	function route() {
 		const h = location.hash || "#/";
-		const name = h.startsWith("#/guide") ? "guide" : h.startsWith("#/story") ? "story" : h.startsWith("#/play") ? "play" : "home";
+		const name = h.startsWith("#/guide") ? "guide" : h.startsWith("#/story") ? "story" : h.startsWith("#/play") ? "play" : h.startsWith("#/map") ? "map" : h.startsWith("#/compendium") ? "compendium" : "home";
+		const parts = h.split("/").slice(2);   // "#/map/ironroot" -> ["ironroot"]
 		const anchor = h.includes("#", 1) ? h.slice(h.indexOf("#", 1)) : "";
 		const swap = () => {
 			$$(".view").forEach((v) => v.classList.toggle("on", v.id === "view-" + name));
 			$$(".links a").forEach((a) => a.classList.toggle("on", a.dataset.view === name && !a.classList.contains("btn") && (name !== "home" || !a.hash.includes("#", 2))));
 			if (anchor && $(anchor)) setTimeout(() => $(anchor).scrollIntoView({ behavior: view === name ? "smooth" : "auto" }), 30);
 			else if (view !== name) scrollTo(0, 0);
+			const was = view;
 			view = name; reveal();
+			if (name === "map") openAtlas(parts[0], was !== "map");
+			if (name === "compendium") openCompendium(parts[0], parts[1]);
 		};
 		if (view && view !== name && !reduced) {
 			const p = $("#portal"); p.classList.remove("go"); void p.offsetWidth; p.classList.add("go");
@@ -509,8 +735,7 @@
 		$("#season-tabs").innerHTML = W.seasons.map((s, i) => `<button data-s="${i}">${s.icon} ${esc(s.name.toUpperCase())}</button>`).join("");
 		$("#sky-facts").innerHTML = W.facts.map((f, i) => `<div class="card tilt" data-reveal style="transition-delay:${i * 60}ms"><div class="glare"></div><div class="ico">${f[0]}</div><h3>${esc(f[1])}</h3><p>${esc(f[2])}</p></div>`).join("");
 		$("#sky-shots").innerHTML = W.shots.map((s, i) => `<figure class="sky-shot" data-i="${i}" data-reveal style="transition-delay:${i * 70}ms"><img src="${s[0]}" alt="${esc(s[1])}" loading="lazy"><figcaption>${esc(s[1])}</figcaption></figure>`).join("");
-		const lb = $("#lightbox");
-		$$(".sky-shot").forEach((f) => f.addEventListener("click", () => { const d = W.shots[f.dataset.i]; $("img", lb).src = d[0]; $("p", lb).textContent = d[1]; lb.classList.add("open"); }));
+		$$(".sky-shot").forEach((f) => f.addEventListener("click", () => { const d = W.shots[f.dataset.i]; showBox(d[0], d[1]); }));
 
 		const render = () => {
 			const s = W.seasons[si], k = W.kinds[kind];
