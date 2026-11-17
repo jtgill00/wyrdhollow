@@ -41,7 +41,7 @@ window.WORLD = {
 		{ id: "ironroot", name: "Ironroot Hollow", kind: "place", lean: "light", x: 17.5, y: 30.5, img: "ironroot",
 			about: "A town under giant roots, damp and lamplit, where the Wandwrights carve. Wands here are asked for, not taken. The oldest root holds the guild's Seal.",
 			reach: "Through the root tunnels. Only a Thornhound knows the way: calm one (or bind one) and follow it.",
-			people: ["Mother Hesk", "Bartram Knotwood (the go-between)", "Fern", "Dunmore"],
+			people: ["Mother Hesk", "Bartram Knotwood (the go-between)", "Linden Burl", "Fern", "Dunmore"],
 			creatures: ["Thornhound", "Gloomskitter"],
 			finds: ["Wandwrights' Hall", "Heartwood, for a wand of your own", "Ironroot Timber", "A hidden Ironroot core"] },
 		{ id: "mirrorwood", name: "The Mirrorwood", kind: "place", lean: "shadow", x: 36.5, y: 26.5, img: "mirrorwood",
