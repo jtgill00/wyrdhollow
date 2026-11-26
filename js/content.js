@@ -44,6 +44,7 @@ window.SITE = {
 
 	// "What's new": newest first. [icon, title, text, optional link]
 	news: [
+		["📚", "The book arrives January 2027", "WyrdHollow: Part 1, the novel JT has been writing since 2020, launches in January 2027.", "#/#book"],
 		["🗺️", "The whole valley, mapped", "JT's painted map of the valley, with a light on every place. Tap one to see what it is, how to reach it, and who and what you'll meet there.", "#/map"],
 		["📖", "A Field Compendium", "Painted plates of the creatures, brooms, wands and Seals, the black glass tower, and the peoples and schools beyond the valley.", "#/compendium"],
 		["🪡", "Linnet Evermoor", "A new best friend on the village well, with heart scenes of her own, a part in the main story and a moment in all four endings.", "#/#characters"],

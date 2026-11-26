@@ -701,3 +701,14 @@ a.ev-card:hover { text-decoration: none; transform: translateY(-3px); border-col
 #lightbox > div { display: grid; justify-items: center; gap: 10px; max-height: 100%; }
 #lightbox p { margin: 0; }
 #lb-alt[hidden] { display: none; }
+
+/* The Book: the novel announcement on the home page. The cover is a placeholder drawn in CSS until there is real cover art. */
+.book { display: grid; grid-template-columns: auto 1fr; gap: 60px; align-items: center; }
+.book-cover { width: 250px; aspect-ratio: 2 / 3; border-radius: 6px 14px 14px 6px; padding: 26px 18px; display: flex; flex-direction: column; align-items: center; text-align: center; background: linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0 10px, transparent 16px), radial-gradient(ellipse at 50% 55%, #3a2168 0%, #1a1030 60%, #0d0819 100%); border: 1px solid rgba(255, 207, 90, 0.5); box-shadow: inset 0 0 0 8px #120b22, inset 0 0 0 9px rgba(255, 207, 90, 0.35), 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 70px var(--glow); transform: rotate(-3deg); }
+.book-cover .bc-top, .book-cover .bc-part, .book-cover .bc-by { font-family: var(--pixel); font-size: 0.62rem; letter-spacing: 0.3em; color: var(--accent3); }
+.book-cover .bc-title { margin-top: 34px; font-family: var(--display); font-weight: 900; font-size: 2.2rem; line-height: 1.05; background: linear-gradient(120deg, #fff3c4, #ffcf5a 40%, #ff9a3d 75%, #ffe8a8); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.book-cover .bc-part { margin-top: 14px; }
+.book-cover .bc-seal { margin: auto 0; font-size: 2.6rem; color: #c9a6ff; text-shadow: 0 0 24px #a070ff, 0 0 60px #a070ff; }
+.book-date { display: inline-block; margin: 6px 0 18px; padding: 10px 18px; border-radius: 999px; font-family: var(--pixel); font-size: 0.74rem; letter-spacing: 0.2em; color: #1a1206; background: linear-gradient(120deg, #ffe8a8, #ffcf5a 50%, #ff9a3d); }
+.book-note { font-size: 0.9rem; color: var(--muted); font-style: italic; }
+@media (max-width: 760px) { .book { grid-template-columns: 1fr; gap: 36px; justify-items: center; text-align: center; } .book-cover { width: 200px; } }
