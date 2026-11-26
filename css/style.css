@@ -712,3 +712,7 @@ a.ev-card:hover { text-decoration: none; transform: translateY(-3px); border-col
 .book-date { display: inline-block; margin: 6px 0 18px; padding: 10px 18px; border-radius: 999px; font-family: var(--pixel); font-size: 0.74rem; letter-spacing: 0.2em; color: #1a1206; background: linear-gradient(120deg, #ffe8a8, #ffcf5a 50%, #ff9a3d); }
 .book-note { font-size: 0.9rem; color: var(--muted); font-style: italic; }
 @media (max-width: 760px) { .book { grid-template-columns: 1fr; gap: 36px; justify-items: center; text-align: center; } .book-cover { width: 200px; } }
+.hero-book { display: inline-flex; align-items: center; gap: 10px; margin: -14px 0 30px; padding: 9px 18px; border-radius: 999px; font-family: var(--sans); font-size: 0.92rem; color: var(--ink); text-decoration: none; background: rgba(20, 16, 34, 0.7); border: 1px solid rgba(255, 207, 90, 0.55); box-shadow: 0 0 30px var(--glow); transition: transform 0.25s var(--ease), border-color 0.25s; }
+.hero-book:hover { transform: translateY(-2px); border-color: #ffcf5a; }
+.hero-book b { font-family: var(--pixel); font-size: 0.62rem; letter-spacing: 0.15em; color: #1a1206; background: linear-gradient(120deg, #ffe8a8, #ffcf5a 50%, #ff9a3d); padding: 4px 9px; border-radius: 999px; }
+.hero-book span { color: var(--accent); }
