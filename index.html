@@ -64,6 +64,14 @@
 					<a class="btn ghost magnet" href="#/play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Play free in your browser</a>
 				</div>
 				<div class="hero-meta"><span><b>PC</b> · STEAM DECK</span><span><b>1</b> PLAYER</span><span><b>4</b> ENDINGS</span><span><b>14</b> SKILLS</span></div>
+				<!-- The trailer: wide cut on computers, tall cut on phones. Nothing downloads until Play is pressed. -->
+				<div class="hero-trailer" id="trailer">
+					<video id="trailer-video" playsinline preload="none" poster="assets/trailer/poster.jpg" aria-label="WyrdHollow trailer"></video>
+					<button class="trailer-play" id="trailer-play" type="button" aria-label="Watch the trailer">
+						<span class="ring"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+						<span class="label">WATCH THE TRAILER <i>0:40</i></span>
+					</button>
+				</div>
 			</div>
 			<div class="parade" id="parade" aria-hidden="true"></div>
 			<div class="scroll-hint"></div>

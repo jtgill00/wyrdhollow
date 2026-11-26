@@ -825,6 +825,20 @@
 		else a.addEventListener("click", (e) => { e.preventDefault(); a.animate([{ transform: "translateX(0)" }, { transform: "translateX(-6px)" }, { transform: "translateX(6px)" }, { transform: "translateX(0)" }], 300); const t = a.innerHTML; a.innerHTML = "Steam page coming soon ✦"; setTimeout(() => a.innerHTML = t, 1800); });
 	});
 
+	// The trailer in the hero: press Play and it loads the wide cut, or the tall cut on a phone held upright.
+	const trailer = $("#trailer"), tv = $("#trailer-video");
+	if (trailer && tv) {
+		$("#trailer-play").addEventListener("click", () => {
+			const tall = matchMedia("(max-width: 700px) and (orientation: portrait)").matches;
+			tv.src = tall ? "assets/trailer/trailer-tall.mp4" : "assets/trailer/trailer.mp4";
+			tv.controls = true;
+			trailer.classList.add("playing");
+			tv.play().catch(() => {});
+			if (window.WHTrack) WHTrack.event("trailer_play");
+		});
+		tv.addEventListener("ended", () => { trailer.classList.remove("playing"); tv.controls = false; tv.removeAttribute("src"); tv.load(); });
+	}
+
 	$(".menu-btn").addEventListener("click", () => $(".links").classList.toggle("open"));
 	$("#year").textContent = new Date().getFullYear();
 

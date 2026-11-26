@@ -164,6 +164,24 @@ header.top.hide { transform: translateY(-100%); }
 .hero-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 .hero-meta { margin-top: 36px; display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-family: var(--pixel); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.15em; }
 .hero-meta b { color: var(--accent); }
+/* The trailer under the hero buttons. */
+.hero-trailer { position: relative; width: min(760px, 100%); aspect-ratio: 16 / 9; margin: 34px auto 0; border-radius: var(--radius); overflow: hidden; background: #000; border: 1px solid rgba(255, 207, 90, 0.45); box-shadow: 0 24px 70px rgba(0, 0, 0, 0.65), 0 0 60px var(--glow); }
+.hero-trailer video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.trailer-play { position: absolute; inset: 0; width: 100%; border: 0; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; color: #fff; background: radial-gradient(ellipse at center, rgba(7, 6, 13, 0.15), rgba(7, 6, 13, 0.6)); transition: background 0.3s; }
+.trailer-play:hover { background: radial-gradient(ellipse at center, rgba(7, 6, 13, 0), rgba(7, 6, 13, 0.45)); }
+.trailer-play .ring { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; color: #1a1206; background: linear-gradient(120deg, #ffe8a8, #ffcf5a 50%, #ff9a3d); box-shadow: 0 0 0 0 rgba(255, 207, 90, 0.6); animation: trailer-pulse 2s infinite; transition: transform 0.25s var(--ease); }
+.trailer-play:hover .ring { transform: scale(1.1); }
+.trailer-play .ring svg { width: 38px; height: 38px; margin-left: 4px; }
+.trailer-play .label { font-family: var(--pixel); font-size: 0.74rem; letter-spacing: 0.22em; text-shadow: 0 2px 10px #000; }
+.trailer-play .label i { font-style: normal; color: var(--accent); margin-left: 8px; }
+@keyframes trailer-pulse { 70% { box-shadow: 0 0 0 22px rgba(255, 207, 90, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 207, 90, 0); } }
+.hero-trailer.playing .trailer-play { display: none; }
+.hero:has(.hero-trailer) { padding-bottom: 170px; }   /* room for the parade to run underneath */
+@media (max-width: 700px) and (orientation: portrait) {
+	.hero-trailer.playing { width: min(78vw, 340px); aspect-ratio: 9 / 16; }   /* the tall cut on phones */
+	.trailer-play .ring { width: 66px; height: 66px; } .trailer-play .ring svg { width: 30px; height: 30px; }
+}
+@media (prefers-reduced-motion: reduce) { .trailer-play .ring { animation: none; } }
 /* The parade under the title: the hero on a broom, goblins giving chase, then the creatures. */
 .parade { position: absolute; bottom: 5vh; left: 0; display: flex; align-items: flex-end; gap: 18px; z-index: 1; pointer-events: none; animation: parade 38s linear infinite; will-change: transform; }
 @keyframes parade { from { transform: translateX(calc(-100% - 60px)); } to { transform: translateX(100vw); } }
