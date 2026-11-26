@@ -18,7 +18,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=Silkscreen&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="css/style.css?v=19">
+	<link rel="stylesheet" href="css/style.css?v=20">
 </head>
 <body class="locked">
 	<div id="loader"><div class="sig"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div><p>WEAVING THE VALLEY…</p></div>
@@ -223,6 +223,32 @@
 		</section>
 
 
+		<!-- Email sign-up. Stays hidden until SITE.signup.url is set in js/content.js. -->
+		<section class="signup" id="updates" hidden>
+			<div class="wrap">
+				<div class="signup-card" data-reveal>
+					<span class="kicker">Owl post</span>
+					<h2>News from the valley, <span class="grad-text">by owl.</span></h2>
+					<p class="lead">Leave your email and JT will write when there's something worth an owl: game updates, new quests and places on the map, when Part 2 is coming, and the book's release.</p>
+					<form id="signup-form" novalidate>
+						<div class="signup-row">
+							<input type="email" id="signup-email" name="email" autocomplete="email" inputmode="email" placeholder="you@example.com" aria-label="Your email address" required>
+							<button class="btn" type="submit">Send me news</button>
+						</div>
+						<input type="text" name="website" tabindex="-1" autocomplete="off" class="signup-trap" aria-hidden="true">
+						<div class="signup-picks" role="group" aria-label="What would you like to hear about?">
+							<label><input type="checkbox" name="interest" value="Game updates" checked><span>🎮 Game updates</span></label>
+							<label><input type="checkbox" name="interest" value="New quests and map" checked><span>🗺️ New quests and map</span></label>
+							<label><input type="checkbox" name="interest" value="Part 2" checked><span>✨ Part 2</span></label>
+							<label><input type="checkbox" name="interest" value="The book" checked><span>📚 The book</span></label>
+						</div>
+						<p class="signup-msg" id="signup-msg" role="status" aria-live="polite"></p>
+						<p class="signup-small">Only WyrdHollow news, never passed on to anyone else, and you can unsubscribe at any time. <a href="privacy.html">Privacy</a></p>
+					</form>
+				</div>
+			</div>
+		</section>
+
 		<section class="everywhere" id="everywhere">
 			<div class="wrap">
 				<span class="kicker" data-reveal>Play and follow</span>
@@ -361,10 +387,10 @@
 	<div id="lightbox"><div><img alt=""><p></p><button type="button" class="btn ghost" id="lb-alt" hidden>See the pencil sketch</button></div></div>
 	<div id="person-modal"><div class="box"></div></div>
 
-	<script src="js/tracking.js?v=16"></script>
+	<script src="js/tracking.js?v=17"></script>
 	<script src="js/data.js?v=14"></script>
-	<script src="js/content.js?v=15"></script>
+	<script src="js/content.js?v=16"></script>
 	<script src="js/world.js?v=1"></script>
-	<script src="js/app.js?v=16"></script>
+	<script src="js/app.js?v=17"></script>
 </body>
 </html>

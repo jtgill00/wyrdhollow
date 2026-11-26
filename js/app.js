@@ -825,6 +825,37 @@
 		else a.addEventListener("click", (e) => { e.preventDefault(); a.animate([{ transform: "translateX(0)" }, { transform: "translateX(-6px)" }, { transform: "translateX(6px)" }, { transform: "translateX(0)" }], 300); const t = a.innerHTML; a.innerHTML = "Steam page coming soon ✦"; setTimeout(() => a.innerHTML = t, 1800); });
 	});
 
+	// Email sign-up. The section only shows once SITE.signup.url is set (js/content.js).
+	const su = SITE.signup || {}, suBox = $("#updates"), suForm = $("#signup-form");
+	if (su.url && suBox && suForm) {
+		suBox.hidden = false;
+		const msg = $("#signup-msg");
+		const say = (t, bad) => { msg.textContent = t; msg.classList.toggle("bad", Boolean(bad)); };
+		suForm.addEventListener("submit", async (e) => {
+			e.preventDefault();
+			const email = $("#signup-email").value.trim();
+			if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { say("That email doesn't look right. Mind checking it?", true); return; }
+			if (suForm.website.value) { suBox.classList.add("done"); say("Thank you!"); return; }   // a bot filled the hidden box
+			const picks = Array.from(suForm.querySelectorAll("input[name=interest]:checked")).map((i) => i.value);
+			const btn = suForm.querySelector("button");
+			btn.disabled = true; say("Sending your owl…");
+			try {
+				// HubSpot wants its own shape: a list of named fields plus where the sign-up came from.
+				const body = su.kind === "hubspot"
+					? { fields: [{ name: "email", value: email }, { name: su.interestsField || "wyrdhollow_interests", value: picks.join("; ") }], context: { pageUri: location.href, pageName: document.title } }
+					: { email, interests: picks.join(", ") };
+				const r = await fetch(su.url, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(body) });
+				if (!r.ok) throw new Error(r.status);
+				suBox.classList.add("done");
+				say("You're on the list. Watch the sky for an owl ✦");
+				if (window.WHTrack) WHTrack.event("email_signup");
+			} catch (err) {
+				say("The owl got lost. Please try again in a moment.", true);
+				btn.disabled = false;
+			}
+		});
+	}
+
 	// The trailer in the hero: press Play and it loads the wide cut, or the tall cut on a phone held upright.
 	const trailer = $("#trailer"), tv = $("#trailer-video");
 	if (trailer && tv) {

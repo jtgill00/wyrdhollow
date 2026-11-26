@@ -15,6 +15,7 @@
 //   play_started (GA4) / PlayStarted (Meta) – someone pressed Start on the Play page.
 //   This is the number the ads are judged on.
 //   trailer_play – someone pressed Play on the trailer on the home page.
+//   email_signup – someone joined the email list on the home page.
 // ------------------------------------------------------------------------------------------
 (() => {
 	const GA_ID = "G-SYL0TQYTLD";

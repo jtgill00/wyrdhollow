@@ -7,6 +7,12 @@ window.SITE = {
 	// e.g. "https://store.steampowered.com/app/1234567/WyrdHollow_Part_1/".
 	steamUrl: "",
 
+	// Email sign-up ("Owl post" on the home page). While url is empty the sign-up section stays hidden.
+	// url is the address the form posts to at the email service; kind says which service it is.
+	// For HubSpot (account 343954210): kind "hubspot" and
+	// url "https://api.hsforms.com/submissions/v3/integration/submit/343954210/<the form's ID>".
+	signup: { url: "", kind: "" },
+
 	marquee: ["Six Seals", "One Crown", "Light or Shadow", "Brew", "Duel", "Fly", "Fish", "Fall in Love", "The Weave Remembers"],
 
 	// Weather and seasons. The chances are the game's own (WeatherRules.CHANCES):
