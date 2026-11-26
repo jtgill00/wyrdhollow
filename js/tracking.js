@@ -16,6 +16,7 @@
 //   This is the number the ads are judged on.
 //   trailer_play – someone pressed Play on the trailer on the home page.
 //   email_signup – someone joined the email list on the home page.
+//   email_popup_shown – the email sign-up pop-up opened.
 // ------------------------------------------------------------------------------------------
 (() => {
 	const GA_ID = "G-SYL0TQYTLD";

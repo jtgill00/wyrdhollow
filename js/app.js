@@ -826,14 +826,16 @@
 	});
 
 	// Email sign-up. The section only shows once SITE.signup.url is set (js/content.js).
-	const su = SITE.signup || {}, suBox = $("#updates"), suForm = $("#signup-form");
-	if (su.url && suBox && suForm) {
-		suBox.hidden = false;
-		const msg = $("#signup-msg");
+	// The same form appears twice: in the "Owl post" section and in the pop-up. wireSignup runs both.
+	const su = SITE.signup || {};
+	const owlGet = () => { try { return localStorage.getItem("wh-owl") || ""; } catch (e) { return ""; } };
+	const owlSet = (v) => { try { localStorage.setItem("wh-owl", v); } catch (e) {} };
+	const wireSignup = (suBox, suForm) => {
+		const msg = $(".signup-msg", suForm);
 		const say = (t, bad) => { msg.textContent = t; msg.classList.toggle("bad", Boolean(bad)); };
 		suForm.addEventListener("submit", async (e) => {
 			e.preventDefault();
-			const email = $("#signup-email").value.trim();
+			const email = $("input[type=email]", suForm).value.trim();
 			if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { say("That email doesn't look right. Mind checking it?", true); return; }
 			if (suForm.website.value) { suBox.classList.add("done"); say("Thank you!"); return; }   // a bot filled the hidden box
 			const picks = Array.from(suForm.querySelectorAll("input[name=interest]:checked")).map((i) => i.value);
@@ -848,12 +850,55 @@
 				if (!r.ok) throw new Error(r.status);
 				suBox.classList.add("done");
 				say("You're on the list. Watch the sky for an owl ✦");
+				owlSet("joined");
+				const no = $(".owl-no", suBox); if (no) no.textContent = "Close";
 				if (window.WHTrack) WHTrack.event("email_signup");
 			} catch (err) {
 				say("The owl got lost. Please try again in a moment.", true);
 				btn.disabled = false;
 			}
 		});
+	};
+	const suSection = $("#updates"), owlPop = $("#owl-pop");
+	if (su.url && suSection) { suSection.hidden = false; wireSignup(suSection, $("form", suSection)); }
+
+	// The pop-up. It opens by itself once per visitor after POP_SECONDS on the site. If they are watching
+	// the trailer it waits until the trailer is over. It never opens over the cookie question or a running
+	// game, and not again for POP_REST_DAYS after being closed. Anything marked data-owl (the "Get news" button) opens it too.
+	const POP_SECONDS = 10, POP_REST_DAYS = 14;
+	if (su.url && owlPop) {
+		wireSignup(owlPop, $("form", owlPop));
+		let auto = false;
+		const open = (byItself) => {
+			if (owlPop.classList.contains("open")) return;
+			auto = Boolean(byItself);
+			owlPop.classList.add("open");
+			if (!byItself) setTimeout(() => $("input[type=email]", owlPop).focus(), 50);
+			if (window.WHTrack) WHTrack.event("email_popup_shown");
+		};
+		const close = () => {
+			if (!owlPop.classList.contains("open")) return;
+			owlPop.classList.remove("open");
+			if (auto && owlGet() !== "joined") owlSet("closed:" + Date.now());
+		};
+		owlPop.addEventListener("click", (e) => { if (e.target === owlPop || e.target.closest("[data-owl-close]")) close(); });
+		addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+		$$("[data-owl]").forEach((b) => { b.hidden = false; b.addEventListener("click", (e) => { e.preventDefault(); open(false); }); });
+
+		const seen = owlGet();
+		const resting = seen === "joined" || (seen.startsWith("closed:") && Date.now() - Number(seen.slice(7)) < POP_REST_DAYS * 864e5);
+		if (!resting) {
+			let armed = false, done = false;
+			const busy = () => $("#consent") || $(".running") || $("#lightbox.open") || $("#person-modal.open") || document.fullscreenElement || (film && !film.paused);
+			const tryOpen = () => {
+				if (done || !armed) return;
+				if (busy()) { setTimeout(tryOpen, 3000); return; }
+				done = true; open(true);
+			};
+			setTimeout(() => { armed = true; tryOpen(); }, POP_SECONDS * 1000);
+			const film = $("#trailer-video");
+			if (film) film.addEventListener("ended", () => setTimeout(tryOpen, 800));
+		}
 	}
 
 	// The trailer in the hero: press Play and it loads the wide cut, or the tall cut on a phone held upright.

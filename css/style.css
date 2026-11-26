@@ -736,5 +736,24 @@ a.ev-card:hover { text-decoration: none; transform: translateY(-3px); border-col
 .signup-msg.bad { color: #ff8f8f; }
 .signup-small { margin: 6px 0 0; font-size: 0.82rem; color: var(--muted); }
 .signup-small a { color: var(--accent); }
-.signup.done .signup-row, .signup.done .signup-picks { display: none; }
+.done .signup-row, .done .signup-picks, .done .owl-lead { display: none; }
 @media (max-width: 600px) { .signup-card { padding: 36px 20px; } .signup-row { flex-direction: column; } .signup-row .btn { justify-content: center; } }
+
+/* Email sign-up pop-up. */
+#owl-pop { position: fixed; inset: 0; z-index: 9300; display: none; place-items: center; background: rgba(4, 3, 8, 0.78); backdrop-filter: blur(8px); padding: 16px; overflow-y: auto; }
+#owl-pop.open { display: grid; animation: fadein 0.3s; }
+#owl-pop .box { position: relative; max-width: 560px; width: 100%; padding: 40px 34px 26px; border-radius: 26px; text-align: center; background: var(--bg2); border: 1px solid rgba(255, 207, 90, 0.55); box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7), 0 0 90px var(--glow); animation: swapin 0.5s var(--ease); }
+#owl-pop h2 { font-size: clamp(1.6rem, 5vw, 2.2rem); margin: 8px 0 10px; }
+#owl-pop .owl-seal { width: 74px; height: 74px; margin: -76px auto 14px; display: grid; place-items: center; font-size: 2.2rem; border-radius: 50%; background: var(--bg2); border: 1px solid rgba(255, 207, 90, 0.55); box-shadow: 0 0 40px var(--glow); }
+#owl-pop .owl-lead { margin: 0 auto; max-width: 440px; color: var(--muted); }
+#owl-pop .signup-row { margin-top: 22px; }
+#owl-pop .signup-picks { margin-top: 16px; gap: 8px; }
+#owl-pop .signup-picks span { padding: 7px 13px; font-size: 0.84rem; }
+#owl-pop .signup-msg { margin-top: 12px; }
+.owl-close { position: absolute; top: 12px; right: 12px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: rgba(7, 6, 13, 0.6); color: var(--ink); font-size: 1rem; cursor: pointer; }
+.owl-close:hover { border-color: var(--accent); }
+.owl-no { margin-top: 12px; padding: 8px 14px; background: none; border: 0; color: var(--muted); font: inherit; font-size: 0.9rem; text-decoration: underline; cursor: pointer; }
+.owl-no:hover { color: var(--ink); }
+#owl-pop.done .owl-no { color: var(--ink); }
+[data-owl][hidden] { display: none !important; }
+@media (max-width: 600px) { #owl-pop { align-items: end; } #owl-pop .box { padding: 38px 18px 18px; margin-top: 50px; } }
