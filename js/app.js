@@ -841,20 +841,44 @@
 			const picks = Array.from(suForm.querySelectorAll("input[name=interest]:checked")).map((i) => i.value);
 			const btn = suForm.querySelector("button");
 			btn.disabled = true; say("Sending your owl…");
-			try {
-				// HubSpot wants its own shape: a list of named fields plus where the sign-up came from.
+			const interests = picks.join("; ");
+			// First try: the service's normal address. HubSpot wants its own shape: named fields plus the page.
+			const first = async () => {
 				const body = su.kind === "hubspot"
-					? { fields: [{ name: "email", value: email }, { name: su.interestsField || "wyrdhollow_interests", value: picks.join("; ") }], context: { pageUri: location.href, pageName: document.title } }
-					: { email, interests: picks.join(", ") };
-				const r = await fetch(su.url, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(body) });
-				if (!r.ok) throw new Error(r.status);
+					? { fields: [{ name: "email", value: email }, { name: su.interestsField || "wyrdhollow_interests", value: interests }], context: { pageUri: location.href.split("#")[0], pageName: "WyrdHollow website" } }
+					: { email, interests };
+				const r = await fetch(su.url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+				if (r.ok) return "ok";
+				let why = ""; try { why = JSON.stringify(await r.json()); } catch (e) {}
+				if (r.status === 400 && why.includes("EMAIL")) return "email";   // the service itself refused the address
+				throw new Error("s" + r.status);
+			};
+			// Second try, if the first never arrived (a content blocker or a patchy connection): the service's
+			// plain form address on a different domain. It cannot answer back, so arriving at all counts.
+			const second = async () => {
+				const f = new URLSearchParams(); f.set("email", email); f.set(su.interestsField || "wyrdhollow_interests", interests);
+				await fetch(su.backup, { method: "POST", mode: "no-cors", body: f });
+				return "ok";
+			};
+			let result = "", code = "";
+			try { result = await first(); }
+			catch (err) {
+				code = String(err && err.message || "").startsWith("s") ? err.message.slice(1) : "net";
+				if (su.backup) { try { result = await second(); } catch (e2) { code += "+net"; } }
+			}
+			if (result === "ok") {
 				suBox.classList.add("done");
 				say("You're on the list. Watch the sky for an owl ✦");
 				owlSet("joined");
 				const no = $(".owl-no", suBox); if (no) no.textContent = "Close";
-				if (window.WHTrack) WHTrack.event("email_signup");
-			} catch (err) {
-				say("The owl got lost. Please try again in a moment.", true);
+				try { if (window.WHTrack) WHTrack.event("email_signup"); } catch (e) {}
+			} else if (result === "email") {
+				say("That email address was turned away. Mind checking it, or trying another?", true);
+				btn.disabled = false;
+			} else {
+				// The code in brackets says what went wrong: "net" = never reached the service (often an ad or
+				// content blocker), a number = the service's own error.
+				say(code.includes("net") ? "The owl couldn't get through. If you use an ad blocker, try switching it off for this page. (" + code + ")" : "The owl got lost. Please try again in a moment. (" + code + ")", true);
 				btn.disabled = false;
 			}
 		});

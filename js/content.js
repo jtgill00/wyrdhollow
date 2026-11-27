@@ -11,7 +11,9 @@ window.SITE = {
 	// url is the address the form posts to at the email service; kind says which service it is.
 	// For HubSpot (account 343954210): kind "hubspot" and
 	// url "https://api.hsforms.com/submissions/v3/integration/submit/343954210/<the form's ID>".
-	signup: { url: "https://api.hsforms.com/submissions/v3/integration/submit/343954210/8aa32674-0a4c-4c3c-aa98-ac39cebf556a", kind: "hubspot" },
+	// backup is a second address for the same form, tried if the first cannot be reached.
+	signup: { url: "https://api.hsforms.com/submissions/v3/integration/submit/343954210/8aa32674-0a4c-4c3c-aa98-ac39cebf556a", kind: "hubspot",
+		backup: "https://forms.hubspot.com/uploads/form/v2/343954210/8aa32674-0a4c-4c3c-aa98-ac39cebf556a" },
 
 	marquee: ["Six Seals", "One Crown", "Light or Shadow", "Brew", "Duel", "Fly", "Fish", "Fall in Love", "The Weave Remembers"],
 
