@@ -125,11 +125,24 @@ header.top.hide { transform: translateY(-100%); }
 .links { display: flex; gap: 6px; align-items: center; }
 .links a { color: var(--ink); font-size: 0.92rem; padding: 8px 14px; border-radius: 999px; position: relative; transition: background 0.25s, color 0.25s; }
 .links a:hover, .links a.on { background: var(--glass-hi); color: var(--accent); text-decoration: none; }
+.drop { position: relative; }
+.drop .caret { font-size: 0.7em; opacity: 0.7; }
+.drop-menu { position: absolute; top: 100%; left: 0; min-width: 190px; display: flex; flex-direction: column; gap: 2px; padding: 8px; border-radius: 16px; background: rgba(7, 6, 13, 0.96); border: 1px solid var(--line); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity 0.2s, transform 0.2s, visibility 0.2s; }
+.drop:hover .drop-menu, .drop:has(a:focus-visible) .drop-menu { opacity: 1; visibility: visible; transform: none; }
+.drop-menu a { white-space: nowrap; }
+.drop:has(.drop-menu a.on) > a { background: var(--glass-hi); color: var(--accent); }
+.drop > a.on ~ .drop-menu a[data-view="compendium"] { background: none; color: var(--ink); }
 .menu-btn { display: none; background: none; border: 1px solid var(--line); color: var(--ink); border-radius: 12px; padding: 8px 12px; font-family: var(--pixel); }
 @media (max-width: 960px) {
 	.links { position: fixed; inset: 72px 0 auto 0; flex-direction: column; background: rgba(7, 6, 13, 0.95); backdrop-filter: blur(16px); padding: 16px; gap: 4px; transform: translateY(-140%); transition: transform 0.45s var(--ease); border-bottom: 1px solid var(--line); }
 	.links.open { transform: none; }
 	.links a { width: 100%; text-align: center; padding: 12px; }
+	.links a.btn { justify-content: center; }
+	.drop { width: 100%; display: flex; flex-direction: column; gap: 4px; }
+	.drop .caret { display: none; }
+	.drop-menu { position: static; opacity: 1; visibility: visible; transform: none; background: none; border: 0; box-shadow: none; padding: 0; gap: 4px; }
+	.drop-menu a { font-size: 0.84rem; color: var(--muted); padding: 9px; }
+	.drop-menu a[data-view="compendium"] { display: none; }
 	.menu-btn { display: block; }
 }
 
@@ -323,6 +336,8 @@ html[data-path="radiant"] .switch button[data-p="radiant"], html[data-path="holl
 /* --- Guilds tabs -------------------------------------------------------------------- */
 .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0; }
 .tabs button { font-family: var(--pixel); font-size: 0.72rem; letter-spacing: 0.08em; padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--glass); color: var(--ink); cursor: pointer; transition: all 0.3s; }
+.tabs a.tab-link { font-family: var(--pixel); font-size: 0.72rem; letter-spacing: 0.08em; padding: 10px 16px; border-radius: 999px; border: 1px dashed var(--line); color: var(--accent); transition: all 0.3s; }
+.tabs a.tab-link:hover { background: var(--glass-hi); text-decoration: none; }
 .tabs button.on { background: var(--grad); color: #140d22; border-color: transparent; box-shadow: 0 0 20px var(--glow); }
 .guild-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; padding: 34px; border-radius: 26px; background: var(--glass); border: 1px solid var(--line); }
 @media (max-width: 760px) { .guild-panel { grid-template-columns: 1fr; } }

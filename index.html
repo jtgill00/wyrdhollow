@@ -18,7 +18,7 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@500;700&family=Silkscreen&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="css/style.css?v=21">
+	<link rel="stylesheet" href="css/style.css?v=22">
 </head>
 <body class="locked">
 	<div id="loader"><div class="sig"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div><p>WEAVING THE VALLEY…</p></div>
@@ -36,18 +36,20 @@
 			<a class="brand" href="#/"><img src="assets/icon.png" alt="">WyrdHollow</a>
 			<button class="menu-btn" aria-label="Menu">MENU</button>
 			<nav class="links">
-				<a href="#/" data-view="home">Home</a>
-				<a href="#/#game" data-view="home">The Game</a>
 				<a href="#/#book" data-view="home">Book</a>
-				<a href="#/#weather" data-view="home">Seasons</a>
-				<a href="#/#characters" data-view="home">Characters</a>
-				<a href="#/map" data-view="map">Map</a>
-				<a href="#/compendium" data-view="compendium">Compendium</a>
+				<div class="drop">
+					<a href="#/compendium" data-view="compendium" aria-haspopup="true">Compendium <span class="caret" aria-hidden="true">▾</span></a>
+					<div class="drop-menu">
+						<a href="#/compendium" data-view="compendium">Creatures &amp; lore</a>
+						<a href="#/map" data-view="map">Maps</a>
+						<a href="#/#weather" data-view="home">Seasons</a>
+						<a href="#/#characters" data-view="home">Characters</a>
+					</div>
+				</div>
 				<a href="#/guide" data-view="guide">Guide</a>
 				<a href="#/story" data-view="story">Story</a>
-				<a href="#/play" data-view="play">Play</a>
-				<a href="#" data-owl hidden>✉ Get news</a>
-				<a class="btn" data-steam href="#" style="padding:10px 16px;font-size:.7rem">Wishlist</a>
+				<a href="#" data-owl hidden>News</a>
+				<a class="btn" href="#/play" data-view="play" style="padding:10px 16px;font-size:.7rem">Play</a>
 			</nav>
 		</div>
 	</header>
@@ -419,6 +421,6 @@
 	<script src="js/data.js?v=14"></script>
 	<script src="js/content.js?v=18"></script>
 	<script src="js/world.js?v=1"></script>
-	<script src="js/app.js?v=20"></script>
+	<script src="js/app.js?v=21"></script>
 </body>
 </html>

@@ -401,7 +401,8 @@
 				<a class="btn ghost" href="#/map/hollow_keep">Find it on the map</a>
 			</div></div>`;
 
-		tabsEl.innerHTML = TABS.map((t) => `<button type="button" data-t="${t[0]}">${esc(t[1]).toUpperCase()}</button>`).join("");
+		tabsEl.innerHTML = TABS.map((t) => `<button type="button" data-t="${t[0]}">${esc(t[1]).toUpperCase()}</button>`).join("")
+			+ [["#/map", "Maps"], ["#/#weather", "Seasons"], ["#/#characters", "Characters"]].map((l) => `<a class="tab-link" href="${l[0]}">${l[1].toUpperCase()} →</a>`).join("");
 		body.innerHTML = TABS.map((t) => `<div class="comp-panel" id="comp-${t[0]}" hidden>${panels[t[0]]}</div>`).join("");
 		$$("[data-sprite]", body).forEach((n) => {
 			const id = n.dataset.sprite, c = WORLD.creatures.find((x) => x.id === id);
